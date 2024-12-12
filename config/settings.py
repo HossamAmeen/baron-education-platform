@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'users',
     'rest_framework',
     'django_filters',
+    'course',
 ]
 AUTH_USER_MODEL = 'users.UserAccount'
 MIDDLEWARE = [
