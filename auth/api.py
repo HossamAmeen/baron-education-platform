@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from auth.models import PasswordReset
-from auth.serializer import (ResetPasswordRequestSerializer,
+from auth.serializer import (LoginSerializer, ResetPasswordRequestSerializer,
                              ResetPasswordSerializer)
 from users.models import UserAccount
 from users.serializers import UserAccountSerializer
@@ -24,19 +24,24 @@ class RegisterUserAccountAPI(APIView):
 
 
 class LoginAPI(APIView):
+    serializer_class = LoginSerializer
+
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        user = UserAccount.objects.filter(email=username).first() or \
-            UserAccount.objects.filter(phone=username).first()
-        if not user or not user.check_password(password):
-            return Response({"error": "Invalid credentials"},
-                            status=status.HTTP_401_UNAUTHORIZED)
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            "access": str(refresh.access_token),
-            "refresh": str(refresh),
-        }, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            username = serializer.data.get("username")
+            password = serializer.data.get("password")
+            user = UserAccount.objects.filter(email=username).first() or \
+                UserAccount.objects.filter(phone=username).first()
+            if not user or not user.check_password(password):
+                return Response({"error": "Invalid credentials"},
+                                status=status.HTTP_401_UNAUTHORIZED)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                    "access": str(refresh.access_token),
+                    "refresh": str(refresh),
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RequestPasswordReset(generics.GenericAPIView):
