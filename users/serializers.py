@@ -14,6 +14,22 @@ class UserAccountSerializer(serializers.ModelSerializer):
             'password': {'write_only': True, 'required': True}
         }
 
+    def validate(self, data):
+        email = data.get('email')
+        phone = data.get('phone')
+
+        if not email and not phone:
+            return serializers.ValidationError(
+                "Please Enter  Email or Phone Number!")
+
+        if email and UserAccount.objects.filter(email=email).exists():
+            return serializers.ValidationError("Email Already Exists!")
+
+        if phone and UserAccount.objects.filter(phone=phone).exists():
+            return serializers.ValidationError("Phone Number Already Exists!")
+
+        return data
+
     def validate_password(self, value):
         return make_password(value)
 
