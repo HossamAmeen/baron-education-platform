@@ -16,5 +16,5 @@ class ReviewViewSet(ModelViewSet):
 
 
 class ConfigurationViewSet(ModelViewSet):
-    queryset = Configuration.objects.order_by('-id')
+    queryset = Configuration.objects.order_by('-id').first()
     serializer_class = ConfigurationSerializer
