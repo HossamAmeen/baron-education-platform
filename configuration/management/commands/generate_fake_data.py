@@ -34,6 +34,7 @@ class Command(BaseCommand):
 
         self.generate_reviews(fake)
         self.generate_sliders(fake)
+        # self.generate_studnets(fake)
         self.stdout.write(self.style.SUCCESS('Successfully generated 20 reviews'))
 
     def generate_sliders(self, fake):
