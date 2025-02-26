@@ -9,6 +9,7 @@ router.register(r'reviews', ReviewViewSet, basename="reviews")
 
 
 urlpatterns = router.urls
-urlpatterns = +[
+
+urlpatterns += [
     path('configuration/', ConfigurationRetrieveView.as_view(), name='configuration-detail'),
 ]
