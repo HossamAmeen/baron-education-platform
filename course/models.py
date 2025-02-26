@@ -13,7 +13,7 @@ class City(models.Model):
 
 class EducationStage(models.Model):
     name = models.CharField(max_length=100)
-
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
 class EducationGrade(models.Model):
     name = models.CharField(max_length=100)
