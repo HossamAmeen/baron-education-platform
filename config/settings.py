@@ -64,16 +64,14 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    
     'django.middleware.common.CommonMiddleware',
-    'query_inspector.middleware.QueryCountMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# if DEBUG:
-#     MIDDLEWARE.append('query_inspector.middleware.QueryCountMiddleware')
+if DEBUG:
+    MIDDLEWARE.append('query_inspector.middleware.QueryCountMiddleware')
 
 ROOT_URLCONF = 'config.urls'
 

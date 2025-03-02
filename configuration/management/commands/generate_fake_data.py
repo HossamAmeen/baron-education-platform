@@ -98,7 +98,7 @@ class Command(BaseCommand):
                 start_date=start_date,
                 hours_count=hours_count,
                 duration=duration,
-                semster=semester
+                semester=semester
             )
 
             # Save image to ImageField

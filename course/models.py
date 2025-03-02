@@ -52,4 +52,4 @@ class Subject(models.Model):
     start_date = models.DateField()
     hours_count = models.IntegerField()
     duration = models.IntegerField()
-    semster = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
