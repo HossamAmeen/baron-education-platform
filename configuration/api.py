@@ -1,5 +1,6 @@
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.viewsets import ModelViewSet
+
 from configuration.models import Configuration, Review, Slider
 from configuration.serializer import (ConfigurationSerializer,
                                       ReviewSerializer, SliderSerializer)

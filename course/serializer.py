@@ -1,7 +1,15 @@
 from rest_framework import serializers
 
-from course.models import City, Course, Group, Lesson, Semester, Subject
+from course.models import (City, Country, Course, EducationStage, Group, EducationGrade,
+                           Lesson, Semester, Subject)
 from users.serializers import StudentSerializer, TeacherSerializer
+
+
+class CountrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Country
+        fields = '__all__'
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -30,6 +38,23 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
+
+
+class EducationGradeSerializer(serializers.ModelSerializer):
+    semesters = SemesterSerializer(source="semester_set", many=True)
+
+    class Meta:
+        model = EducationGrade
+        fields = "__all__"
+
+
+class EducationStageSerializer(serializers.ModelSerializer):
+    grades = EducationGradeSerializer(source="educationgrade_set", many=True)
+
+    class Meta:
+        model = EducationStage
+        fields = "__all__"
+
 
 
 class ListCourseSerializer(serializers.ModelSerializer):

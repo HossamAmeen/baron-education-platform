@@ -2,8 +2,10 @@ import requests
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from faker import Faker
-from course.models import EducationGrade, EducationStage, Semester, Country, City, Subject
-from configuration.models import Review, Slider, Configuration
+
+from configuration.models import Configuration, Review, Slider
+from course.models import (City, Country, EducationGrade, EducationStage,
+                           Semester, Subject)
 
 
 class Command(BaseCommand):
@@ -140,12 +142,12 @@ class Command(BaseCommand):
                             name=f"Semester {i + 1}",
                             education_grade=grade
                         )
-                        self.stdout.write(self.style.SUCCESS(f'      ↳ Created Semester: {semester.name} in {grade.name}'))
+                        self.stdout.write(self.style.SUCCESS(f'Created Semester: {semester.name} in {grade.name}'))
 
-        # Generate Cities
-        for _ in range(10):
-            city = City.objects.create(name=fake.city())
-            self.stdout.write(self.style.SUCCESS(f'Created City: {city.name}'))
+            # Generate Cities
+            for _ in range(2):
+                city = City.objects.create(name=fake.city(), country=egypt)
+                self.stdout.write(self.style.SUCCESS(f'Created City: {city.name}'))
 
         self.stdout.write(self.style.SUCCESS('Fake data generation complete! 🎉'))
         return Semester.objects.all()

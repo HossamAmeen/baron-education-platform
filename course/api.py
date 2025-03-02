@@ -1,15 +1,25 @@
 from rest_framework.viewsets import ModelViewSet
 
-from course.models import City, Course, Group, Lesson, Semester, Subject
+from course.models import (City, Country, Course, EducationStage, Group,
+                           Lesson, Semester, Subject)
 from course.serializer import (CitySerializer, CourseSerializer,
-                               GroupSerializer, LessonSerializer,
-                               ListCourseSerializer, SemesterSerializer,
-                               SubjectSerializer)
+                               EducationStageSerializer, GroupSerializer,
+                               LessonSerializer, ListCourseSerializer,
+                               SemesterSerializer, SubjectSerializer)
+
+
+class CountryViewSet(ModelViewSet):
+    queryset = Country.objects.order_by('-id')
+    serializer_class = CitySerializer
 
 
 class CityViewSet(ModelViewSet):
     queryset = City.objects.order_by('-id')
     serializer_class = CitySerializer
+
+class EducationStageViewSet(ModelViewSet):
+    queryset = EducationStage.objects.prefetch_related( 'educationgrade_set__semester_set').order_by('-id')
+    serializer_class = EducationStageSerializer
 
 
 class SemesterViewSet(ModelViewSet):
@@ -32,7 +42,6 @@ class CourseViweSet(ModelViewSet):
 
 
 class LessonViewSet(ModelViewSet):
-
     queryset = Lesson.objects.order_by('-id')
     serializer_class = LessonSerializer
 
