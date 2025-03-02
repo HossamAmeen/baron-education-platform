@@ -2,15 +2,15 @@ from rest_framework.viewsets import ModelViewSet
 from course.filters import SubjectFilter
 from course.models import (City, Country, Course, EducationStage, Group,
                            Lesson, Semester, Subject)
-from course.serializer import (CitySerializer, CourseSerializer,
+from course.serializer import (CitySerializer, CourseSerializer, CountrySerializer,
                                EducationStageSerializer, GroupSerializer,
                                LessonSerializer, ListCourseSerializer,
                                SemesterSerializer, SubjectSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
 
 class CountryViewSet(ModelViewSet):
-    queryset = Country.objects.order_by('-id')
-    serializer_class = CitySerializer
+    queryset = Country.objects.prefetch_related('educationstage_set__educationgrade_set__semester_set').order_by('-id')
+    serializer_class = CountrySerializer
 
 
 class CityViewSet(ModelViewSet):

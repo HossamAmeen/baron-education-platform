@@ -5,13 +5,6 @@ from course.models import (City, Country, Course, EducationStage, Group, Educati
 from users.serializers import StudentSerializer, TeacherSerializer
 
 
-class CountrySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Country
-        fields = '__all__'
-
-
 class CitySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -55,6 +48,13 @@ class EducationStageSerializer(serializers.ModelSerializer):
         model = EducationStage
         fields = "__all__"
 
+
+class CountrySerializer(serializers.ModelSerializer):
+    education_stages = EducationStageSerializer(source="educationstage_set", many=True)
+
+    class Meta:
+        model = Country
+        fields = '__all__'
 
 
 class ListCourseSerializer(serializers.ModelSerializer):
