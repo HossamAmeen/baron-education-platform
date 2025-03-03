@@ -17,6 +17,14 @@ class Review(models.Model):
     ordering = models.IntegerField()
 
 
+class ContactUs(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=50)
+    subject = models.CharField(max_length=100)
+    description = models.TextField()
+
+
 class Configuration(models.Model):
     eg_number = models.CharField(max_length=15)
     ksa_number = models.CharField(max_length=15)

@@ -7,7 +7,7 @@ from configuration.api import (ConfigurationRetrieveView, ReviewViewSet,
 router = DefaultRouter()
 router.register(r'sliders', SliderViewSet, basename="sliders")
 router.register(r'reviews', ReviewViewSet, basename="reviews")
-
+router.register(r'contact-us', ContactUsViewSet, basename="reviews")
 
 urlpatterns = router.urls
 

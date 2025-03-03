@@ -1,9 +1,9 @@
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet
 
-from configuration.models import Configuration, Review, Slider
+from configuration.models import Configuration, Review, Slider, ContactUs
 from configuration.serializer import (ConfigurationSerializer,
-                                      ReviewSerializer, SliderSerializer)
+                                      ReviewSerializer, SliderSerializer, ContactUsSerializer)
 
 
 class SliderViewSet(ModelViewSet):
@@ -14,6 +14,11 @@ class SliderViewSet(ModelViewSet):
 class ReviewViewSet(ModelViewSet):
     queryset = Review.objects.order_by('ordering')
     serializer_class = ReviewSerializer
+
+
+class ContactUsViewSet(ModelViewSet):
+    queryset = ContactUs.objects.order_by('-id')
+    serializer_class = ContactUsSerializer
 
 
 class ConfigurationRetrieveView(RetrieveAPIView):
