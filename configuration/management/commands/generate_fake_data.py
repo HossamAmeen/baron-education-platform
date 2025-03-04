@@ -95,9 +95,6 @@ class Command(BaseCommand):
                 name=name,
                 description=description,
                 available=available,
-                start_date=start_date,
-                hours_count=hours_count,
-                duration=duration,
                 semester=semester
             )
 
@@ -134,7 +131,7 @@ class Command(BaseCommand):
                         name=fake.word() + " Grade",
                         education_stage=stage
                     )
-                    self.stdout.write(self.style.SUCCESS(f'    ↳ Created Education Grade: {grade.name} in {stage.name}'))
+                    self.stdout.write(self.style.SUCCESS(f'Created Education Grade: {grade.name} in {stage.name}'))
 
                     # Generate Semesters for each Grade
                     for i in range(2):
