@@ -37,7 +37,7 @@ class Command(BaseCommand):
         self.generate_reviews(fake)
         self.generate_sliders(fake)
         semesters = self.generate_semesters(fake)
-        self.generate_students(fake, semesters)
+        self.generate_subjects(fake, semesters)
         self.stdout.write(self.style.SUCCESS('Successfully generated 20 reviews'))
 
     def generate_sliders(self, fake):
@@ -75,14 +75,11 @@ class Command(BaseCommand):
                 ordering=fake.random_int(min=1, max=100)
         )
 
-    def generate_students(self, fake, semesters):
+    def generate_subjects(self, fake, semesters):
         for _ in range(10):
             name = fake.catch_phrase()
             description = fake.text()
             available = fake.boolean()
-            start_date = fake.date_between(start_date='-1y', end_date='+1y')
-            hours_count = fake.random_int(min=1, max=100)
-            duration = fake.random_int(min=1, max=52)
 
             # Randomly pick a semester
             semester = fake.random_element(elements=semesters)
