@@ -57,6 +57,12 @@ class CountrySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SingleCouurseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'name']
+
+
 class ListCourseSerializer(serializers.ModelSerializer):
     teacher = TeacherSerializer()
     student = StudentSerializer(many=True)
@@ -74,7 +80,8 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class SubjectSerializer(serializers.ModelSerializer):
+    available_course = SingleCouurseSerializer(source="available_courses", many=True)
 
     class Meta:
         model = Subject
-        fields = ['id', 'name', 'available', 'image', 'semester']
+        fields = ['id', 'name', 'available', 'image', 'semester', 'available', 'available_course']

@@ -7,6 +7,8 @@ from course.serializer import (CitySerializer, CourseSerializer, CountrySerializ
                                LessonSerializer, ListCourseSerializer,
                                SemesterSerializer, SubjectSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Prefetch
+from django.db.models import Subquery, OuterRef
 
 class CountryViewSet(ModelViewSet):
     queryset = Country.objects.prefetch_related('educationstage_set__educationgrade_set__semester_set').order_by('-id')
@@ -47,7 +49,14 @@ class LessonViewSet(ModelViewSet):
 
 
 class SubjectViewSet(ModelViewSet):
-    queryset = Subject.objects.order_by('-id')
+    queryset = Subject.objects.prefetch_related(
+        Prefetch(
+            'course_set', 
+            queryset=Course.objects.filter(available=True)[:1], 
+            to_attr='available_courses'
+        )
+    ).order_by('-id')
+
     serializer_class = SubjectSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = SubjectFilter

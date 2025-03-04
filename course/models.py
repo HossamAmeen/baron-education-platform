@@ -31,6 +31,13 @@ class Group(models.Model):
     name = models.CharField(max_length=100)
     time = models.DateTimeField()
 
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(null=True)
+    available = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='media/')
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
@@ -39,6 +46,8 @@ class Course(models.Model):
     start_date = models.DateField()
     hours_count = models.IntegerField()
     duration = models.IntegerField()
+    image = models.ImageField(upload_to='media/')
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     student = models.ManyToManyField(Student)
 
@@ -47,11 +56,3 @@ class Lesson(models.Model):
     title = models.CharField(max_length=100)
     date = models.DateField()
     time = models.TimeField()
-
-
-class Subject(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(null=True)
-    available = models.BooleanField(default=True)
-    image = models.ImageField(upload_to='media/')
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)

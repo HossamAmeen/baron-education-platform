@@ -4,8 +4,8 @@ from django.core.management.base import BaseCommand
 from faker import Faker
 
 from configuration.models import Configuration, Review, Slider
-from course.models import (City, Country, EducationGrade, EducationStage,
-                           Semester, Subject)
+from course.models import (City, Country, EducationGrade, EducationStage, Course,
+                           Semester, Subject, Teacher)
 
 
 class Command(BaseCommand):
@@ -102,7 +102,29 @@ class Command(BaseCommand):
                     ContentFile(image_response.content), 
                     save=True
                 )
+            else:
+                subject.save()
 
+            teacher = Teacher.objects.create(
+                first_name=fake.name(),
+                phone=fake.phone_number(),
+                username=fake.word() + str(fake.random_int(min=1, max=100)),
+                password=fake.word(),
+                email=fake.email(),
+                address=fake.address()
+            )
+
+            Course.objects.create(
+                name=name,
+                description=description,
+                available=available,
+                start_date=fake.date(),
+                hours_count=fake.random_int(min=1, max=100),
+                duration=fake.random_int(min=1, max=100),
+                image=subject.image,
+                teacher=teacher,
+                subject=subject
+            )
         self.stdout.write(self.style.SUCCESS(f'Subject "{subject.name}" created for semester "{semester}" with image 1024x480!'))
 
     def generate_semesters(self, fake):
