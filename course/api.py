@@ -1,6 +1,8 @@
 from typing import override
+
 from django.db.models import Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from course.filters import SubjectFilter
@@ -8,9 +10,9 @@ from course.models import (Country, Course, EducationStage, Group, Lesson,
                            Semester, Subject)
 from course.serializer import (CountrySerializer, CourseSerializer,
                                EducationStageSerializer, GroupSerializer,
-                               LessonSerializer, ListCourseSerializer, RetrieveCourseSerializer,
-                               SemesterSerializer, SubjectSerializer)
-from rest_framework.generics import ListAPIView
+                               LessonSerializer, ListCourseSerializer,
+                               RetrieveCourseSerializer, SemesterSerializer,
+                               SubjectSerializer)
 
 
 class CountryListAPIView(ListAPIView):

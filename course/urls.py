@@ -1,8 +1,9 @@
-from rest_framework.routers import DefaultRouter
 from django.urls import path
-from course.api import (CountryListAPIView, CourseViweSet, EducationStageViewSet,
-                        GroupViewSet, LessonViewSet, SemesterViewSet,
-                        SubjectViewSet)
+from rest_framework.routers import DefaultRouter
+
+from course.api import (CountryListAPIView, CourseViweSet,
+                        EducationStageViewSet, GroupViewSet, LessonViewSet,
+                        SemesterViewSet, SubjectViewSet)
 
 router = DefaultRouter()
 router.register(r'education-stages', EducationStageViewSet, basename="education-stations")

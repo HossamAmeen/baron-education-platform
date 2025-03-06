@@ -6,8 +6,8 @@ from django.core.management.base import BaseCommand
 from faker import Faker
 
 from configuration.models import Configuration, Review, Slider
-from course.models import (Country, Course, EducationGrade,
-                           EducationStage, Lesson, Semester, Subject, Teacher)
+from course.models import (Country, Course, EducationGrade, EducationStage,
+                           Lesson, Semester, Subject, Teacher)
 
 
 class Command(BaseCommand):
