@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from auth.models import PasswordReset
-from auth.serializer import (ResetPasswordRequestSerializer,
+from auth.serializer import (ResetPasswordRequestSerializer, LoginSerializer,
                              ResetPasswordSerializer)
 from users.models import UserAccount
 from users.serializers import UserAccountSerializer
@@ -23,19 +23,23 @@ class RegisterUserAccountAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LoginAPI(APIView):
+class LoginAPI(generics.CreateAPIView):
+    serializer_class = LoginSerializer
+
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        user = UserAccount.objects.filter(email=username).first() or \
-            UserAccount.objects.filter(phone=username).first()
-        if not user or not user.check_password(password):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = UserAccount.objects.filter(
+            Q(email=serializer.validated_data['username']) | Q(phone=serializer.validated_data['username'])
+        ).first()
+        if not user or not user.check_password(serializer.validated_data['password']):
             return Response({"error": "Invalid credentials"},
                             status=status.HTTP_401_UNAUTHORIZED)
-        refresh = RefreshToken.for_user(user)
+        tokens = RefreshToken.for_user(user)
         return Response({
-            "access": str(refresh.access_token),
-            "refresh": str(refresh),
+            "access": str(tokens.access_token),
+            "refresh": str(tokens),
         }, status=status.HTTP_200_OK)
 
 

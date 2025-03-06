@@ -12,6 +12,11 @@ class MyTokenPairSerializer(TokenObtainPairSerializer):
         return token
 
 
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+
 class ResetPasswordRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 

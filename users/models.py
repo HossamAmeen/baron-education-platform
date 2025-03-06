@@ -14,7 +14,7 @@ class UserAccount(AbstractUser):
     is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['full_name', 'phone']
+    REQUIRED_FIELDS = ['first_name', 'phone']
 
     def get_role(self):
         if hasattr(self, 'admin'):
