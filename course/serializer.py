@@ -59,15 +59,24 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ['id', 'title', 'date', 'time']
+        fields = ['id', 'title', 'date', 'time', 'explanation_file', 'test_link', 'video_link']
 
 
-class ListCourseSerializer(serializers.ModelSerializer):
+
+class RetrieveCourseSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(source="lesson_set", many=True)
+
 
     class Meta:
         model = Course
         fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image', 'lessons']
+
+
+class ListCourseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image']
 
 
 

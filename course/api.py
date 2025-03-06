@@ -1,3 +1,4 @@
+from typing import override
 from django.db.models import Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
@@ -7,7 +8,7 @@ from course.models import (Country, Course, EducationStage, Group, Lesson,
                            Semester, Subject)
 from course.serializer import (CountrySerializer, CourseSerializer,
                                EducationStageSerializer, GroupSerializer,
-                               LessonSerializer, ListCourseSerializer,
+                               LessonSerializer, ListCourseSerializer, RetrieveCourseSerializer,
                                SemesterSerializer, SubjectSerializer)
 from rest_framework.generics import ListAPIView
 
@@ -37,19 +38,24 @@ class GroupViewSet(ModelViewSet):
 
 class CourseViweSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Course.objects.prefetch_related(
-        Prefetch(
-            'lesson_set',
-            queryset=Lesson.objects.order_by('-id'),
-            to_attr='lessons'
-        )
-    ).order_by('-id')
+    queryset = Course.objects.order_by('-id')
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
+        if self.action == 'list':
             return ListCourseSerializer
+        if self.action == 'retrieve':
+            return RetrieveCourseSerializer
         return CourseSerializer
 
+    def get_queryset(self):
+        if self.action == "retrieve":
+            return self.queryset.prefetch_related(
+                Prefetch(
+                    'lesson_set',
+                    queryset=Lesson.objects.order_by('-id'),
+                    to_attr='lessons')
+                )
+        return self.queryset
 class LessonViewSet(ModelViewSet):
     schema = None
     queryset = Lesson.objects.order_by('-id')
