@@ -1,15 +1,7 @@
 from rest_framework import serializers
 
-from course.models import (City, Country, Course, EducationStage, Group, EducationGrade,
-                           Lesson, Semester, Subject)
-from users.serializers import StudentSerializer, TeacherSerializer
-
-
-class CitySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = City
-        fields = '__all__'
+from course.models import (Country, Course, EducationGrade, EducationStage,
+                           Group, Lesson, Semester, Subject)
 
 
 class SemesterSerializer(serializers.ModelSerializer):

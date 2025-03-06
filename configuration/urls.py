@@ -1,8 +1,8 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from configuration.api import (ConfigurationRetrieveView, ReviewViewSet, ContactUsViewSet,
-                               SliderViewSet)
+from configuration.api import (ConfigurationRetrieveView, ContactUsViewSet,
+                               ReviewViewSet, SliderViewSet)
 
 router = DefaultRouter()
 router.register(r'sliders', SliderViewSet, basename="sliders")

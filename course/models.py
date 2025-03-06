@@ -8,11 +8,6 @@ class Country(models.Model):
     code = models.CharField(max_length=10)
 
 
-class City(models.Model):
-    name = models.CharField(max_length=100)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-
-
 class EducationStage(models.Model):
     name = models.CharField(max_length=100)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)

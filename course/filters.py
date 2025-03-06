@@ -1,5 +1,7 @@
 import django_filters
+
 from .models import Subject
+
 
 class SubjectFilter(django_filters.FilterSet):
     semester = django_filters.CharFilter(field_name='semester', lookup_expr='exact')

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from configuration.models import Configuration, Review, Slider, ContactUs
+from configuration.models import Configuration, ContactUs, Review, Slider
 
 
 class SliderSerializer(serializers.ModelSerializer):

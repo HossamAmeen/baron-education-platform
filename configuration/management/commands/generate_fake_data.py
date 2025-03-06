@@ -1,11 +1,13 @@
+from datetime import date
+
 import requests
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from faker import Faker
-from datetime import date
+
 from configuration.models import Configuration, Review, Slider
-from course.models import (City, Country, EducationGrade, EducationStage, Course,
-                           Semester, Subject, Teacher)
+from course.models import (City, Country, Course, EducationGrade,
+                           EducationStage, Semester, Subject, Teacher)
 
 
 class Command(BaseCommand):
