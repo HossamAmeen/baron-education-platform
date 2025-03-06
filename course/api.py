@@ -1,5 +1,3 @@
-from typing import override
-
 from django.db.models import Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import ListAPIView
