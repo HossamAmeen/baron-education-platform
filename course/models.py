@@ -40,12 +40,18 @@ class Subject(models.Model):
 
 
 class Course(models.Model):
+    class CurrencyCHOICES(models.TextChoices):
+        EGP = 'EGP'
+        KSA = 'KSA'
+
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     available = models.BooleanField(default=True)
     start_date = models.DateField()
     hours_count = models.IntegerField()
     duration = models.IntegerField()
+    price = models.IntegerField()
+    currency = models.CharField(max_length=3, choices=CurrencyCHOICES.choices, default=CurrencyCHOICES.EGP)
     image = models.ImageField(upload_to='media/')
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)

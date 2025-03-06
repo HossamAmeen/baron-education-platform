@@ -35,7 +35,7 @@ class GroupViewSet(ModelViewSet):
 
 
 class CourseViweSet(ModelViewSet):
-    queryset = Course.objects.order_by('-id')
+    queryset = Course.objects.filter(available=True).order_by('-id')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

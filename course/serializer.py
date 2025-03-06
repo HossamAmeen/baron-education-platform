@@ -64,12 +64,11 @@ class SingleCouurseSerializer(serializers.ModelSerializer):
 
 
 class ListCourseSerializer(serializers.ModelSerializer):
-    teacher = TeacherSerializer()
-    student = StudentSerializer(many=True)
+
 
     class Meta:
         model = Course
-        fields = '__all__'
+        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image']
 
 
 class LessonSerializer(serializers.ModelSerializer):

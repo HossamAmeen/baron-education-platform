@@ -2,7 +2,7 @@ import requests
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from faker import Faker
-
+from datetime import date
 from configuration.models import Configuration, Review, Slider
 from course.models import (City, Country, EducationGrade, EducationStage, Course,
                            Semester, Subject, Teacher)
@@ -118,9 +118,11 @@ class Command(BaseCommand):
                 name=name,
                 description=description,
                 available=available,
-                start_date=fake.date(),
+                start_date=fake.date_between(start_date=date(2025,4, 1), end_date="+1y"),
                 hours_count=fake.random_int(min=1, max=100),
                 duration=fake.random_int(min=1, max=100),
+                price=fake.random_int(min=1, max=100),
+                currency=fake.random_element(elements=Course.CurrencyCHOICES),
                 image=subject.image,
                 teacher=teacher,
                 subject=subject
