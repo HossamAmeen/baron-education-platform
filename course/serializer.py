@@ -55,19 +55,20 @@ class SingleCouurseSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-class ListCourseSerializer(serializers.ModelSerializer):
-
-
-    class Meta:
-        model = Course
-        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image']
-
-
 class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
         fields = ['id', 'title', 'date', 'time']
+
+
+class ListCourseSerializer(serializers.ModelSerializer):
+    lessons = LessonSerializer(source="lesson_set", many=True)
+
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image', 'lessons']
+
 
 
 class SubjectSerializer(serializers.ModelSerializer):

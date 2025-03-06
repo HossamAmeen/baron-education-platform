@@ -7,6 +7,7 @@ from users.serializers import (AdminSerializer, ManagerSerializer,
 
 
 class AdminViewSet(ModelViewSet):
+    schema = None
     queryset = Admin.objects.order_by('-id')
     serializer_class = AdminSerializer
     filter_backends = [filters.SearchFilter]
@@ -14,6 +15,7 @@ class AdminViewSet(ModelViewSet):
 
 
 class TeacherViewSet(ModelViewSet):
+    schema = None
     queryset = Teacher.objects.order_by('-id')
     serializer_class = TeacherSerializer
     filter_backends = [filters.SearchFilter]
@@ -21,6 +23,7 @@ class TeacherViewSet(ModelViewSet):
 
 
 class StudentViewSet(ModelViewSet):
+    schema = None
     queryset = Student.objects.order_by('-id')
     serializer_class = StudentSerializer
     filter_backends = [filters.SearchFilter]
@@ -28,6 +31,7 @@ class StudentViewSet(ModelViewSet):
 
 
 class ManagerViewSet(ModelViewSet):
+    schema = None
     queryset = Manager.objects.order_by('-id')
     serializer_class = ManagerSerializer
     filter_backends = [filters.SearchFilter]

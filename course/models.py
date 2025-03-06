@@ -57,3 +57,7 @@ class Lesson(models.Model):
     title = models.CharField(max_length=100)
     date = models.DateField()
     time = models.TimeField()
+    explanation_file = models.FileField(upload_to='media/')
+    test_link = models.URLField()
+    video_link = models.URLField()
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)

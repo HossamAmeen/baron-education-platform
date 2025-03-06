@@ -18,35 +18,46 @@ class CountryListAPIView(ListAPIView):
 
 
 class EducationStageViewSet(ModelViewSet):
+    schema = None
     queryset = EducationStage.objects.prefetch_related( 'educationgrade_set__semester_set').order_by('-id')
     serializer_class = EducationStageSerializer
 
 
 class SemesterViewSet(ModelViewSet):
+    schema = None
     queryset = Semester.objects.order_by('-id')
     serializer_class = SemesterSerializer
 
 
 class GroupViewSet(ModelViewSet):
+    schema = None
     queryset = Group.objects.order_by('-id')
     serializer_class = GroupSerializer
 
 
 class CourseViweSet(ModelViewSet):
-    queryset = Course.objects.filter(available=True).order_by('-id')
+    http_method_names = ["get"]
+    queryset = Course.objects.prefetch_related(
+        Prefetch(
+            'lesson_set',
+            queryset=Lesson.objects.order_by('-id'),
+            to_attr='lessons'
+        )
+    ).order_by('-id')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ListCourseSerializer
         return CourseSerializer
 
-
 class LessonViewSet(ModelViewSet):
+    schema = None
     queryset = Lesson.objects.order_by('-id')
     serializer_class = LessonSerializer
 
 
 class SubjectViewSet(ModelViewSet):
+    http_method_names = ["get"]
     queryset = Subject.objects.prefetch_related(
         Prefetch(
             'course_set', 
