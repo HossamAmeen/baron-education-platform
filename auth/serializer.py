@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from users.models import UserAccount
+
 
 class MyTokenPairSerializer(TokenObtainPairSerializer):
 
@@ -33,3 +35,9 @@ class ResetPasswordSerializer(serializers.Serializer):
         if attrs['new_password'] != attrs['confirm_password']:
             raise serializers.ValidationError({"password": "Passwords do not match"})
         return attrs
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = ['first_name', 'last_name', 'phone',  'email', 'gender']
