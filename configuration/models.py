@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django_extensions.db.models import TimeStampedModel
 
 
 class Slider(models.Model):

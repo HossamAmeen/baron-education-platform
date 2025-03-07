@@ -37,15 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
 ]
+
 THIRT_PARTY_APPS = [
     'django_filters',
     'drf_spectacular',
     'rest_framework',
+    'django_extensions',
 ]
+
 LOCAL_APPS = [
     'auth',
     'configuration',
     'course',
+    'payments',
     'users',
 ]
 INSTALLED_APPS += THIRT_PARTY_APPS + LOCAL_APPS

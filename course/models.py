@@ -1,32 +1,33 @@
 from django.db import models
-
+from payments.models import Transaction
 from users.models import Student, Teacher
+from django_extensions.db.models import TimeStampedModel
 
 
-class Country(models.Model):
+class Country(TimeStampedModel):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=10)
 
 
-class EducationStage(models.Model):
+class EducationStage(TimeStampedModel):
     name = models.CharField(max_length=100)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
-class EducationGrade(models.Model):
+class EducationGrade(TimeStampedModel):
     name = models.CharField(max_length=100)
     education_stage = models.ForeignKey(EducationStage, on_delete=models.CASCADE)
 
 
-class Semester(models.Model):
+class Semester(TimeStampedModel):
     name = models.CharField(max_length=100)
     education_grade = models.ForeignKey(EducationGrade, on_delete=models.CASCADE)
 
 
-class Group(models.Model):
+class Group(TimeStampedModel):
     name = models.CharField(max_length=100)
     time = models.DateTimeField()
 
-class Subject(models.Model):
+class Subject(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     available = models.BooleanField(default=True)
@@ -34,7 +35,7 @@ class Subject(models.Model):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
 
 
-class Course(models.Model):
+class Course(TimeStampedModel):
     class CurrencyCHOICES(models.TextChoices):
         EGP = 'EGP'
         KSA = 'KSA'
@@ -50,10 +51,9 @@ class Course(models.Model):
     image = models.ImageField(upload_to='media/')
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    student = models.ManyToManyField(Student)
 
 
-class Lesson(models.Model):
+class Lesson(TimeStampedModel):
     title = models.CharField(max_length=100)
     date = models.DateField()
     time = models.TimeField()
@@ -61,3 +61,9 @@ class Lesson(models.Model):
     test_link = models.URLField()
     video_link = models.URLField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+
+class StudentCourse(TimeStampedModel):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
