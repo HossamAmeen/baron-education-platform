@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 from course.filters import SubjectFilter
 from course.models import (Country, Course, EducationStage, Group, Lesson,
                            Semester, Subject)
-from course.serializer import (CountrySerializer, CourseSerializer,
+from course.serializers import (CountrySerializer, CourseSerializer,
                                EducationStageSerializer, GroupSerializer,
                                LessonSerializer, ListCourseSerializer,
                                RetrieveCourseSerializer, SemesterSerializer,
@@ -55,7 +55,11 @@ class CourseViweSet(ModelViewSet):
                     queryset=Lesson.objects.order_by('-id'),
                     to_attr='lessons')
                 )
+        if self.request.user: 
+            self.queryset.filter(students=self.request.user)
         return self.queryset
+
+
 class LessonViewSet(ModelViewSet):
     schema = None
     queryset = Lesson.objects.order_by('-id')

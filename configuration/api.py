@@ -2,7 +2,7 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from configuration.models import Configuration, ContactUs, Review, Slider
-from configuration.serializer import (ConfigurationSerializer,
+from configuration.serializers import (ConfigurationSerializer,
                                       ContactUsSerializer, ReviewSerializer,
                                       SliderSerializer)
 

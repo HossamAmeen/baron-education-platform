@@ -86,3 +86,9 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = ['id', 'name', 'available', 'image', 'semester', 'available', 'available_course']
+
+
+class StudentCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image']

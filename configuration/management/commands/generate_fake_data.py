@@ -7,7 +7,7 @@ from faker import Faker
 
 from configuration.models import Configuration, Review, Slider
 from course.models import (Country, Course, EducationGrade, EducationStage,
-                           Lesson, Semester, Subject, Teacher)
+                           Lesson, Semester, Subject, Teacher, Student)
 
 
 class Command(BaseCommand):
@@ -154,6 +154,16 @@ class Command(BaseCommand):
                     email=fake.email(),
                     address=fake.address()
                 )
+        student = Student.objects.create(
+            first_name=fake.name(),
+            phone="01010079796",
+            username=fake.word() + str(fake.random_int(min=1, max=100)),
+            password=fake.word(),
+            email=fake.email(),
+            address=fake.address()
+        )
+        student.set_password("student")
+        student.save()
         for _ in range(10):
             name = fake.catch_phrase()
             description = fake.text()
@@ -172,6 +182,8 @@ class Command(BaseCommand):
                 teacher=teacher,
                 subject=subject
             )
+            if available:
+                student.course_set.add(course)
 
             for _ in range(10):
                 lesson = Lesson.objects.create(
