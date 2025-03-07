@@ -28,3 +28,8 @@ class ResetPasswordSerializer(serializers.Serializer):
         error_messages={'invalid':
                         ('Password must be at least 8 characters long with at least one capital letter and symbol')}) # noqa
     confirm_password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['confirm_password']:
+            raise serializers.ValidationError({"password": "Passwords do not match"})
+        return attrs

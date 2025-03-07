@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from auth import serializer
 from auth.models import PasswordReset
 from auth.serializer import (LoginSerializer, ResetPasswordRequestSerializer,
                              ResetPasswordSerializer)
@@ -13,18 +14,13 @@ from users.models import UserAccount
 from users.serializers import UserAccountSerializer
 
 
-class RegisterUserAccountAPI(APIView):
-
-    def post(self, request):
-        serializer = UserAccountSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"massage": "User registered successfully!"},
-                            status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class RegisterAPI(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserAccountSerializer
 
 
 class LoginAPI(generics.CreateAPIView):
+    permission_classes = [AllowAny]
     serializer_class = LoginSerializer
 
     def post(self, request):
@@ -45,22 +41,22 @@ class LoginAPI(generics.CreateAPIView):
 
 
 class RequestPasswordReset(generics.GenericAPIView):
-
     permission_classes = [AllowAny]
     serializer_class = ResetPasswordRequestSerializer
 
     def post(self, request):
-        email = request.data['email']
-        user = UserAccount.objects.filter(email__iexact=email).first()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = UserAccount.objects.filter(email__iexact=serializer.validated_data['email']).first()
         if user:
-            token_generator = PasswordResetTokenGenerator()
-            token = token_generator.make_token(user)
-            reset = PasswordReset(email=email, token=token)
-            reset.save()
+            if PasswordReset.objects.filter(email=serializer.validated_data['email']).count() > 2:
+                return Response({"message": "we send url to your email."}, status=status.HTTP_200_OK)
 
-            reset_url = PasswordReset.objects.create(email=email, token=token) # noqa
+            token = PasswordResetTokenGenerator().make_token(user)
+            PasswordReset.objects.create(email=user.email, token=token)
 
-            return Response({'success': token}, status=status.HTTP_200_OK)
+            return Response({"message": "we send url to your email.", 'success': token},
+                            status=status.HTTP_200_OK)
         else:
             return Response({"error": "User with credentials not found"},
                             status=status.HTTP_404_NOT_FOUND)
@@ -68,31 +64,25 @@ class RequestPasswordReset(generics.GenericAPIView):
 
 class ResetPassword(generics.GenericAPIView):
     serializer_class = ResetPasswordSerializer
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     def post(self, request, token):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        new_password = data['new_password']
-        confirm_password = data['confirm_password']
+        reset_password = PasswordReset.objects.filter(token=token).first()
 
-        if new_password != confirm_password:
-            return Response({"error": "Passwords do not match"}, status=400)
-
-        reset_obj = PasswordReset.objects.filter(token=token).first()
-
-        if not reset_obj:
+        if not reset_password:
             return Response({'error': 'Invalid token'}, status=400)
 
-        user = UserAccount.objects.filter(email=reset_obj.email).first()
+        user = UserAccount.objects.filter(email=reset_password.email).first()
 
         if user:
             user.set_password(request.data['new_password'])
             user.save()
 
-            reset_obj.delete()
+            reset_password.delete()
 
             return Response({'success': 'Password updated'})
         else:
