@@ -8,19 +8,44 @@ class Country(TimeStampedModel):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=10)
 
+    class Meta:
+        verbose_name_plural = "Countries"
+
+    def __str__(self):
+        return self.name
+
 
 class EducationStage(TimeStampedModel):
     name = models.CharField(max_length=100)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name_plural = "Education Stages"
+
+    def __str__(self):
+        return self.name
+
+
 class EducationGrade(TimeStampedModel):
     name = models.CharField(max_length=100)
     education_stage = models.ForeignKey(EducationStage, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Education Grades"
+
+    def __str__(self):
+        return self.name
 
 
 class Semester(TimeStampedModel):
     name = models.CharField(max_length=100)
     education_grade = models.ForeignKey(EducationGrade, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Semesters"
+
+    def __str__(self):
+        return self.name
 
 
 class Group(TimeStampedModel):
@@ -33,6 +58,12 @@ class Subject(TimeStampedModel):
     available = models.BooleanField(default=True)
     image = models.ImageField(upload_to='media/')
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Subjects"
+
+    def __str__(self):
+        return self.name
 
 
 class Course(TimeStampedModel):
@@ -52,6 +83,12 @@ class Course(TimeStampedModel):
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name_plural = "Courses"
+
+    def __str__(self):
+        return self.name
+
 
 class Lesson(TimeStampedModel):
     title = models.CharField(max_length=100)
@@ -62,8 +99,13 @@ class Lesson(TimeStampedModel):
     video_link = models.URLField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name_plural = "Lessons"
+
+    def __str__(self):
+        return self.title
 
 class StudentCourse(TimeStampedModel):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='student_courses')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_courses')
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)

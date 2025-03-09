@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from course.api import (CountryListAPIView, CourseViweSet,
                         EducationStageViewSet, GroupViewSet, LessonViewSet,
-                        SemesterViewSet, SubjectViewSet, CoursePaymentView)
+                        SemesterViewSet, SubjectViewSet, CoursePaymentView, PaymentCallbackView)
 
 router = DefaultRouter()
 router.register(r'education-stages', EducationStageViewSet, basename="education-stations")

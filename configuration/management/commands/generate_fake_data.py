@@ -8,6 +8,7 @@ from faker import Faker
 from configuration.models import Configuration, Review, Slider
 from course.models import (Country, Course, EducationGrade, EducationStage,
                            Lesson, Semester, Subject, Teacher, Student)
+from users.models import UserAccount
 
 
 class Command(BaseCommand):
@@ -15,6 +16,19 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         fake = Faker()
+
+        owner = UserAccount.objects.filter(email="hosamameen948@gmail.com")
+        if not owner.exists():
+            owner = UserAccount.objects.create(
+                    first_name=fake.name(),
+                    phone="01010079798",
+                    username=fake.word() + str(fake.random_int(min=1, max=100)),
+                    password=fake.word(),
+                    email="hosamameen948@gmail.com"
+                )
+            owner.set_password("admin")
+            owner.save()
+
         config = Configuration.objects.create(
             eg_number=fake.phone_number()[:15],
             ksa_number=fake.phone_number()[:15],
@@ -183,7 +197,7 @@ class Command(BaseCommand):
                 subject=subject
             )
             if available:
-                student.course_set.add(course)
+                student.student_courses.add(course)
 
             for _ in range(10):
                 lesson = Lesson.objects.create(
