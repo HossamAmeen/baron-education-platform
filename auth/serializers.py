@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from users.models import UserAccount
+
 
 class MyTokenPairSerializer(TokenObtainPairSerializer):
 
@@ -10,6 +12,11 @@ class MyTokenPairSerializer(TokenObtainPairSerializer):
         token['role'] = user.get_role()
         token['email'] = user.email
         return token
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
 
 
 class ResetPasswordRequestSerializer(serializers.Serializer):
@@ -23,3 +30,14 @@ class ResetPasswordSerializer(serializers.Serializer):
         error_messages={'invalid':
                         ('Password must be at least 8 characters long with at least one capital letter and symbol')}) # noqa
     confirm_password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['confirm_password']:
+            raise serializers.ValidationError({"password": "Passwords do not match"})
+        return attrs
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = ['first_name', 'last_name', 'phone',  'email', 'gender']

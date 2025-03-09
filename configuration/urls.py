@@ -1,12 +1,16 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from configuration.api import (ConfigurationViewSet, ReviewViewSet,
-                               SliderViewSet)
+from configuration.api import (ConfigurationRetrieveView, ContactUsViewSet,
+                               ReviewViewSet, SliderViewSet)
 
 router = DefaultRouter()
 router.register(r'sliders', SliderViewSet, basename="sliders")
 router.register(r'reviews', ReviewViewSet, basename="reviews")
-router.register(r'configuration',
-                ConfigurationViewSet, basename='configuration')
+router.register(r'contact-us', ContactUsViewSet, basename="contactus")
 
 urlpatterns = router.urls
+
+urlpatterns += [
+    path('configuration/', ConfigurationRetrieveView.as_view(), name='configuration-detail'),
+]
