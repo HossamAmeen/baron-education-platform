@@ -11,6 +11,12 @@ from course.serializers import (CountrySerializer, CourseSerializer,
                                LessonSerializer, ListCourseSerializer,
                                RetrieveCourseSerializer, SemesterSerializer,
                                SubjectSerializer)
+from payments.models import Transaction
+from rest_framework.views import APIView 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from payments.services.paymob_payment_service import PaymobPaymentService
 
 
 class CountryListAPIView(ListAPIView):
@@ -79,3 +85,45 @@ class SubjectViewSet(ModelViewSet):
     serializer_class = SubjectSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = SubjectFilter
+
+
+class CoursePaymentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, course_id):
+        course = Course.objects.filter(id=course_id).first()
+        if not course:
+            return Response({"message": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # check old valid payment
+        transaction = Transaction.objects.filter(user=request.user, status=Transaction.TransactionStatus.PENDING).first()
+        if transaction:
+            return Response({"message": "You already paid for this course"}, status=status.HTTP_200_OK)
+        else:
+            transaction = Transaction.objects.create(status='pending', user=request.user, amount=course.price)
+
+        # Generate Paymob payment link
+        payment_url = PaymobPaymentService.create_paymob_payment(course, request.user)
+
+        return Response({"data": {"payment_url": payment_url}}, status=status.HTTP_200_OK)
+
+
+class PaymentCallbackView(APIView):
+     def post(self, request):
+        paymob_transaction_id = request.data.get("paymob_transaction_id")
+        transaction_id = request.data.get("transaction_id")
+        status = request.data.get("status")
+
+        try:
+            transaction = Transaction.objects.get(id=transaction_id, gateway_transaction_id=paymob_transaction_id)
+        except Transaction.DoesNotExist:
+            return Response({"error": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if status == "paid":
+            transaction.status = "paid"
+            transaction.save()
+            return Response({"message": f"Payment successful for {transaction.payment_for}!"})
+        else:
+            transaction.status = "failed"
+            transaction.save()
+            return Response({"message": "Payment failed"}, status=status.HTTP_400_BAD_REQUEST)
