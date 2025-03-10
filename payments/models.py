@@ -5,11 +5,16 @@ from users.models import UserAccount
 
 
 class Transaction(TimeStampedModel):
+    class CurrencyCHOICES(models.TextChoices):
+        EGP = 'EGP'
+        KSA = 'KSA'
+
     class TransactionStatus(models.TextChoices):
         PENDING = 'pending'
         PAID = 'paid'
         FAILED = 'failed'
 
+    currency = models.CharField(max_length=3, choices=CurrencyCHOICES.choices, default=CurrencyCHOICES.EGP)
     gateway_transaction_id = models.CharField(max_length=255, blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=50, choices=TransactionStatus.choices, default=TransactionStatus.PENDING)

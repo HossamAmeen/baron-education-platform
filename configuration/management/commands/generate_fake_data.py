@@ -8,8 +8,9 @@ from faker import Faker
 
 from configuration.models import Configuration, Review, Slider
 from course.models import (Country, Course, EducationGrade, EducationStage,
-                           Lesson, Semester, Student, Subject, Teacher)
+                           Lesson, Semester, Student, Subject, Teacher, StudentCourse)
 from users.models import UserAccount
+from payments.models import Transaction
 
 
 class Command(BaseCommand):
@@ -158,7 +159,6 @@ class Command(BaseCommand):
             else:
                 subject.save()
         return Subject.objects.all()
-        self.stdout.write(self.style.SUCCESS(f'Subject "{subject.name}" created for semester "{semester}" with image 1024x480!'))
     
     def generate_courses_and_lessons(self, fake, subjects):
         teacher = Teacher.objects.create(
@@ -169,14 +169,16 @@ class Command(BaseCommand):
                     email=fake.email(),
                     address=fake.address()
                 )
-        student = Student.objects.create(
-            first_name=fake.name(),
-            phone="01010079796",
-            username=fake.word() + str(fake.random_int(min=1, max=100)),
-            password=fake.word(),
-            email=fake.email(),
-            address=fake.address()
-        )
+        student = Student.objects.filter(phone="01010079796").first()
+        if not student:
+            student = Student.objects.create(
+                first_name=fake.name(),
+                phone="01010079796",
+                username=fake.word() + str(fake.random_int(min=1, max=100)),
+                password=fake.word(),
+                email=fake.email(),
+                address=fake.address()
+            )
         student.set_password("student")
         student.save()
         for _ in range(10):
@@ -198,7 +200,14 @@ class Command(BaseCommand):
                 subject=subject
             )
             if available:
-                student.student_courses.add(course)
+                transaction = Transaction.objects.create(
+                    amount=fake.random_int(min=1, max=100),
+                    currency=fake.random_element(elements=Course.CurrencyCHOICES),
+                    user=student,
+                    gateway_transaction_id="asd",
+                    status=fake.random_element(elements=Transaction.TransactionStatus),
+                )
+                StudentCourse.objects.create(student=student, course=course, transaction=transaction)
 
             for _ in range(10):
                 lesson = Lesson.objects.create(
