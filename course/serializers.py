@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from course.models import (Country, Course, EducationGrade, EducationStage,
                            Group, Lesson, Semester, Subject)
+from payments.models import Transaction
 
 
 class SemesterSerializer(serializers.ModelSerializer):
@@ -64,13 +65,30 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class RetrieveCourseSerializer(serializers.ModelSerializer):
+    is_paid = serializers.SerializerMethodField()
     lessons = LessonSerializer(source="lesson_set", many=True)
 
 
     class Meta:
         model = Course
         fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price',
-                  'currency', 'image', 'lessons']
+                  'currency', 'image', 'lessons', 'is_paid']
+
+    def get_is_paid(self, obj):
+        user = self.context['request'].user
+        if user and user.is_authenticated  and user.get_role() == "student" and obj.student_courses.filter(
+                student=user, transaction__status=Transaction.TransactionStatus.PAID).exists():
+            return True
+        return False
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        # Hide lessons if not paid
+        if not representation['is_paid']:
+            representation['lessons'] = []
+        
+        return representation
 
 
 class ListCourseSerializer(serializers.ModelSerializer):
