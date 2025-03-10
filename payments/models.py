@@ -1,6 +1,7 @@
 from django.db import models
-from users.models import UserAccount
 from django_extensions.db.models import TimeStampedModel
+
+from users.models import UserAccount
 
 
 class Transaction(TimeStampedModel):

@@ -1,7 +1,8 @@
-from rest_framework.routers import DefaultRouter
 from django.urls import path
-from users.api import (AdminViewSet, ManagerViewSet, StudentViewSet,
-                       TeacherViewSet, StudentCourseListView)
+from rest_framework.routers import DefaultRouter
+
+from users.api import (AdminViewSet, ManagerViewSet, StudentCourseListView,
+                       StudentViewSet, TeacherViewSet)
 
 router = DefaultRouter()
 router.register(r'admins', AdminViewSet, basename="admins")

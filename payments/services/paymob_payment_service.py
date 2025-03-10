@@ -1,8 +1,6 @@
 import requests
 
 
-
-
 class PaymobPaymentService:
     def __init__(self):
         self.PAYMOB_API_KEY = "your_paymob_api_key"

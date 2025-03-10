@@ -3,8 +3,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from configuration.models import Configuration, ContactUs, Review, Slider
 from configuration.serializers import (ConfigurationSerializer,
-                                      ContactUsSerializer, ReviewSerializer,
-                                      SliderSerializer)
+                                       ContactUsSerializer, ReviewSerializer,
+                                       SliderSerializer)
 
 
 class SliderViewSet(ModelViewSet):
