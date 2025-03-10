@@ -3,14 +3,14 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 
-class Slider(models.Model):
+class Slider(TimeStampedModel):
     description = models.TextField(null=True)
     image = models.ImageField(upload_to='media/')
     ordering = models.IntegerField()
     link = models.URLField(null=True)
 
 
-class Review(models.Model):
+class Review(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     rate = models.IntegerField(validators=[
@@ -18,7 +18,7 @@ class Review(models.Model):
     ordering = models.IntegerField()
 
 
-class ContactUs(models.Model):
+class ContactUs(TimeStampedModel):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=50)
@@ -26,7 +26,7 @@ class ContactUs(models.Model):
     description = models.TextField()
 
 
-class Configuration(models.Model):
+class Configuration(TimeStampedModel):
     eg_number = models.CharField(max_length=15)
     ksa_number = models.CharField(max_length=15)
     eg_adderss = models.CharField(max_length=100)
