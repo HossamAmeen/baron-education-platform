@@ -7,7 +7,7 @@ from faker import Faker
 
 from configuration.models import Configuration, Review, Slider
 from course.models import (Country, Course, EducationGrade, EducationStage,
-                           Lesson, Semester, Subject, Teacher, Student)
+                           Lesson, Semester, Student, Subject, Teacher)
 from users.models import UserAccount
 
 

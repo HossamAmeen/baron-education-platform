@@ -7,8 +7,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from auth.models import PasswordReset
-from auth.serializers import (LoginSerializer, ResetPasswordRequestSerializer,
-                             ResetPasswordSerializer, ProfileSerializer)
+from auth.serializers import (LoginSerializer, ProfileSerializer,
+                              ResetPasswordRequestSerializer,
+                              ResetPasswordSerializer)
 from users.models import UserAccount
 from users.serializers import UserAccountSerializer
 

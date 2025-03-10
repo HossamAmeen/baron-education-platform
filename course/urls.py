@@ -1,9 +1,9 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from course.api import (CountryListAPIView, CourseViweSet,
+from course.api import (CountryListAPIView, CoursePaymentView, CourseViweSet,
                         EducationStageViewSet, GroupViewSet, LessonViewSet,
-                        SemesterViewSet, SubjectViewSet, CoursePaymentView, PaymentCallbackView)
+                        PaymentCallbackView, SemesterViewSet, SubjectViewSet)
 
 router = DefaultRouter()
 router.register(r'education-stages', EducationStageViewSet, basename="education-stations")

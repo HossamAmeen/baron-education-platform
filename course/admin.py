@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Country, EducationStage, EducationGrade, Semester, Subject
+
+from .models import Country, EducationGrade, EducationStage, Semester, Subject
+
 
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'code')

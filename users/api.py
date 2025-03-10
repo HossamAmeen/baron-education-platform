@@ -1,13 +1,13 @@
 from rest_framework import filters
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from course.models import Course
+from course.serializers import StudentCourseSerializer
 from users.models import Admin, Manager, Student, Teacher
 from users.serializers import (AdminSerializer, ManagerSerializer,
                                StudentSerializer, TeacherSerializer)
-from course.serializers import StudentCourseSerializer
-from course.models import Course
-from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated
 
 
 class AdminViewSet(ModelViewSet):
