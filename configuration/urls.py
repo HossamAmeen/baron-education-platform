@@ -12,5 +12,6 @@ router.register(r'contact-us', ContactUsViewSet, basename="contactus")
 urlpatterns = router.urls
 
 urlpatterns += [
-    path('configuration/', ConfigurationRetrieveView.as_view(), name='configuration-detail'),
+    path('configuration/', ConfigurationRetrieveView.as_view(),
+         name='configuration-detail'),
 ]

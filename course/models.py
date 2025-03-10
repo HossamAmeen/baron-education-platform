@@ -53,6 +53,7 @@ class Group(TimeStampedModel):
     name = models.CharField(max_length=100)
     time = models.DateTimeField()
 
+
 class Subject(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
@@ -106,7 +107,10 @@ class Lesson(TimeStampedModel):
     def __str__(self):
         return self.title
 
+
 class StudentCourse(TimeStampedModel):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='student_courses')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_courses')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,
+                               related_name='student_courses')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,
+                                related_name='student_courses')
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)

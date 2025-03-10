@@ -59,8 +59,8 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ['id', 'title', 'date', 'time', 'explanation_file', 'test_link', 'video_link']
-
+        fields = ['id', 'title', 'date', 'time', 'explanation_file',
+                  'test_link', 'video_link']
 
 
 class RetrieveCourseSerializer(serializers.ModelSerializer):
@@ -69,14 +69,16 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image', 'lessons']
+        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price',
+                  'currency', 'image', 'lessons']
 
 
 class ListCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image']
+        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration',
+                  'price', 'currency', 'image']
 
 
 
@@ -91,4 +93,5 @@ class SubjectSerializer(serializers.ModelSerializer):
 class StudentCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price', 'currency', 'image']
+        fields = ['id', 'name', 'description', 'start_date', 'hours_count',
+                  'duration', 'price', 'currency', 'image']

@@ -3,7 +3,6 @@ from django.db.models import Q
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from auth.models import PasswordReset
@@ -28,9 +27,11 @@ class LoginAPI(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         user = UserAccount.objects.filter(
-            Q(email=serializer.validated_data['username']) | Q(phone=serializer.validated_data['username'])
+            Q(email=serializer.validated_data['username']) |
+            Q(phone=serializer.validated_data['username'])
         ).first()
-        if not user or not user.check_password(serializer.validated_data['password']):
+        if not user or not user.check_password(
+                serializer.validated_data['password']):
             return Response({"error": "Invalid credentials"},
                             status=status.HTTP_401_UNAUTHORIZED)
         tokens = RefreshToken.for_user(user)
@@ -47,15 +48,19 @@ class RequestPasswordReset(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = UserAccount.objects.filter(email__iexact=serializer.validated_data['email']).first()
+        user = UserAccount.objects.filter(
+                email__iexact=serializer.validated_data['email']).first()
         if user:
-            if PasswordReset.objects.filter(email=serializer.validated_data['email']).count() > 2:
-                return Response({"message": "we send url to your email."}, status=status.HTTP_200_OK)
+            if PasswordReset.objects.filter(
+                    email=user.email).count() > 2:
+                return Response({"message": "we send url to your email."},
+                                status=status.HTTP_200_OK)
 
             token = PasswordResetTokenGenerator().make_token(user)
             PasswordReset.objects.create(email=user.email, token=token)
 
-            return Response({"message": "we send url to your email.", 'success': token},
+            return Response({"message": "we send url to your email.",
+                             "success": token},
                             status=status.HTTP_200_OK)
         else:
             return Response({"error": "User with credentials not found"},
@@ -69,7 +74,6 @@ class ResetPassword(generics.GenericAPIView):
     def post(self, request, token):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
 
         reset_password = PasswordReset.objects.filter(token=token).first()
 
