@@ -1,7 +1,8 @@
-from django.urls import path
-from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import path
+from rest_framework.routers import DefaultRouter
+
 from course.api import (CountryListAPIView, CoursePaymentView, CourseViweSet,
                         EducationStageViewSet, GroupViewSet, LessonViewSet,
                         PaymentCallbackView, SemesterViewSet, SubjectViewSet)

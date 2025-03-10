@@ -5,7 +5,7 @@ from django_extensions.db.models import TimeStampedModel
 
 class Slider(TimeStampedModel):
     description = models.TextField(null=True)
-    image = models.ImageField(upload_to='media/')
+    image = models.ImageField(upload_to='slider_images/')
     ordering = models.IntegerField()
     link = models.URLField(null=True)
 

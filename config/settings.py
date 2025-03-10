@@ -190,5 +190,5 @@ CORS_ALLOWED_ORIGINS = [
     "https://baron-api.egypal.fr",
 ]
 
-MEDIA_URL = '/media/'  # This is the URL where the media files will be served
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
