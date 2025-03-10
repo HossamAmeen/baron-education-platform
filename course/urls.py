@@ -6,7 +6,8 @@ from course.api import (CountryListAPIView, CoursePaymentView, CourseViweSet,
                         PaymentCallbackView, SemesterViewSet, SubjectViewSet)
 
 router = DefaultRouter()
-router.register(r'education-stages', EducationStageViewSet, basename="education-stations")
+router.register(r'education-stages', EducationStageViewSet,
+                basename="education-stations")
 router.register(r'semesters', SemesterViewSet, basename="semesters")
 router.register(r'groups', GroupViewSet, basename="groups")
 router.register(r'courses', CourseViweSet, basename="courses")

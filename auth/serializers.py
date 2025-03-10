@@ -33,7 +33,8 @@ class ResetPasswordSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs['new_password'] != attrs['confirm_password']:
-            raise serializers.ValidationError({"password": "Passwords do not match"})
+            raise serializers.ValidationError(
+                {"password": "Passwords do not match"})
         return attrs
 
 
