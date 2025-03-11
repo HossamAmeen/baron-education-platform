@@ -23,15 +23,18 @@ class CustomUserManager(UserManager):
         return self.create_user(email, phone, password, **extra_fields)
 
 
-class UserAccount(AbstractUser):
-    date_joined = is_superuser = groups = user_permissions = None
+class User(AbstractUser):
+    date_joined = groups = user_permissions = None
+    class UserGender(models.TextChoices):
+        MALE = 'male', 'ذكر'
+        FEMALE = 'female', 'أنثى'
 
-    GENDER_CHOICES = [('male', 'ذكر'), ('female', 'أنثى')]
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
-    gender = models.CharField(max_length=6, choices=GENDER_CHOICES)
+    gender = models.CharField(max_length=6, choices=UserGender.choices, default=UserGender.MALE)
+    role = models.CharField(max_length=50, default='admin')
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=True)
 
@@ -40,15 +43,6 @@ class UserAccount(AbstractUser):
 
     objects = CustomUserManager()
 
-    def get_role(self):
-        if hasattr(self, 'admin'):
-            return "admin"
-        elif hasattr(self, 'manager'):
-            return "manager"
-        elif hasattr(self, 'teacher'):
-            return "teacher"
-        elif hasattr(self, 'student'):
-            return "student"
 
     @property
     def full_name(self):
@@ -58,18 +52,27 @@ class UserAccount(AbstractUser):
         return self.email
 
 
-class Admin(UserAccount):
+class Admin(User):
     pass
 
 
-class Manager(UserAccount):
+class Manager(User):
     pass
 
 
-class Teacher(UserAccount):
+class Teacher(User):
     address = models.CharField(max_length=100)
 
 
-class Student(UserAccount):
+class Student(User):
     address = models.CharField(max_length=100)
     parent_phone = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = 'Student'
+        verbose_name_plural = 'Students'
+
+    def save(self, *args, **kwargs):
+        self.role = "student"
+        self.is_staff = False
+        super().save(*args, **kwargs)

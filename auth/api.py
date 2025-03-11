@@ -8,14 +8,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from auth.models import PasswordReset
 from auth.serializers import (LoginSerializer, ProfileSerializer,
                               ResetPasswordRequestSerializer,
-                              ResetPasswordSerializer)
-from users.models import UserAccount
-from users.serializers import UserAccountSerializer
+                              ResetPasswordSerializer, StudentRegisterSerializer)
+from users.models import User
 
 
 class RegisterAPI(generics.CreateAPIView):
     permission_classes = [AllowAny]
-    serializer_class = UserAccountSerializer
+    serializer_class = StudentRegisterSerializer
 
 
 class LoginAPI(generics.CreateAPIView):
@@ -26,7 +25,7 @@ class LoginAPI(generics.CreateAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        user = UserAccount.objects.filter(
+        user = User.objects.filter(
             Q(email=serializer.validated_data['username']) |
             Q(phone=serializer.validated_data['username'])
         ).first()
@@ -48,7 +47,7 @@ class RequestPasswordReset(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = UserAccount.objects.filter(
+        user = User.objects.filter(
                 email__iexact=serializer.validated_data['email']).first()
         if user:
             if PasswordReset.objects.filter(
@@ -80,7 +79,7 @@ class ResetPassword(generics.GenericAPIView):
         if not reset_password:
             return Response({'error': 'Invalid token'}, status=400)
 
-        user = UserAccount.objects.filter(email=reset_password.email).first()
+        user = User.objects.filter(email=reset_password.email).first()
 
         if user:
             user.set_password(request.data['new_password'])

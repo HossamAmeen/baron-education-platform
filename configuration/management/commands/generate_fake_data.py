@@ -9,7 +9,7 @@ from faker import Faker
 from configuration.models import Configuration, Review, Slider
 from course.models import (Country, Course, EducationGrade, EducationStage,
                            Lesson, Semester, Student, Subject, Teacher, StudentCourse)
-from users.models import UserAccount
+from users.models import User
 from payments.models import Transaction
 
 
@@ -19,9 +19,9 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         fake = Faker()
 
-        owner = UserAccount.objects.filter(email="hosamameen948@gmail.com")
+        owner = User.objects.filter(email="hosamameen948@gmail.com")
         if not owner.exists():
-            owner = UserAccount.objects.create(
+            owner = User.objects.create(
                     first_name=fake.name(),
                     phone="01010079798",
                     username=fake.word() + str(fake.random_int(min=1, max=100)),

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from users.models import UserAccount
+from users.models import User
 
 
 class MyTokenPairSerializer(TokenObtainPairSerializer):
@@ -13,6 +13,13 @@ class MyTokenPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         return token
 
+
+class StudentRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+
+    
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -40,5 +47,5 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserAccount
+        model = User
         fields = ['first_name', 'last_name', 'phone',  'email', 'gender']
