@@ -54,15 +54,8 @@ class CourseViweSet(ModelViewSet):
         return CourseSerializer
 
     def get_queryset(self):
-        if self.action == "retrieve":
-            return self.queryset.prefetch_related(
-                Prefetch(
-                    'lesson_set',
-                    queryset=Lesson.objects.order_by('-id'),
-                    to_attr='lessons')
-                )
-        if self.request.user: 
-            self.queryset.filter(students=self.request.user)
+        if self.request.user and self.request.user.is_authenticated: 
+            self.queryset.filter(student_courses__student=self.request.user)
         return self.queryset
 
 

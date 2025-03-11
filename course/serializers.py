@@ -66,8 +66,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
 class RetrieveCourseSerializer(serializers.ModelSerializer):
     is_paid = serializers.SerializerMethodField()
-    lessons = LessonSerializer(source="lesson_set", many=True)
-
+    lessons = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
@@ -81,14 +80,10 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
             return True
         return False
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        
-        # Hide lessons if not paid
-        if not representation['is_paid']:
-            representation['lessons'] = []
-        
-        return representation
+    def get_lessons(self, obj):
+        if self.get_is_paid(obj) or 1:
+            return LessonSerializer(obj.lesson_set.all(), many=True).data
+        return []
 
 
 class ListCourseSerializer(serializers.ModelSerializer):
