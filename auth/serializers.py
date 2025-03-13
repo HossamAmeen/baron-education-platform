@@ -17,7 +17,7 @@ class MyTokenPairSerializer(TokenObtainPairSerializer):
 class StudentRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ['first_name', 'last_name', 'phone','email', 'gender', 'password']
 
     
 
