@@ -97,13 +97,11 @@ class StudentProfileView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user
-        serializer = self.serializer_class(user)
+        serializer = self.serializer_class(request.user.student)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request):
-        user = request.user
-        serializer = self.serializer_class(user, data=request.data)
+        serializer = self.serializer_class(request.user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
