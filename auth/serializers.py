@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.hashers import make_password
 
 from users.models import User, Student
 
@@ -21,6 +22,8 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password_confirmation']:
             raise serializers.ValidationError(
                 {"password": "Passwords do not match"})
+                
+        attrs['password'] = make_password(attrs['password'])
         return attrs
 
     def create(self, validated_data):
