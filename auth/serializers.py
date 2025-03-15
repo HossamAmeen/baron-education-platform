@@ -16,6 +16,7 @@ class MyTokenPairSerializer(TokenObtainPairSerializer):
 
 
 class StudentRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
     password_confirmation = serializers.CharField(write_only=True, required=True)
 
     def validate(self, attrs):
