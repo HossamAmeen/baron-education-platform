@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from users.models import User
+from users.models import User, Student
 
 
 class MyTokenPairSerializer(TokenObtainPairSerializer):
@@ -15,11 +15,22 @@ class MyTokenPairSerializer(TokenObtainPairSerializer):
 
 
 class StudentRegisterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'phone','email', 'gender', 'password']
+    password_confirmation = serializers.CharField(write_only=True, required=True)
 
-    
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password_confirmation']:
+            raise serializers.ValidationError(
+                {"password": "Passwords do not match"})
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('password_confirmation')
+        return super().create(validated_data)
+
+    class Meta:
+        model = Student
+        fields = ['first_name', 'last_name', 'gender', 'parent_phone', 'phone', 'email', 'password', 'password_confirmation']
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

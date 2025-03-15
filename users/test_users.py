@@ -10,7 +10,7 @@ class TestAdminAPI:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.admin = Admin.objects.create(
-            first_name='admin1', phone='01012070620', username='admin1',
+            first_name='admin1', phone='01012070620',
             password='admin', email='admin1@gmail.com')
         self.client = Client()
         self.url_list = reverse("admins-list")
@@ -23,7 +23,7 @@ class TestAdminAPI:
     def test_create_admin(self):
         data = {
             "first_name": 'admin1', "phone": '01012070620',
-            "username": 'admin2', "password": 'admin',
+            "password": 'admin',
             "email": 'admin1@gmail.com'
         }
         response = self.client.post(self.url_list,
@@ -33,7 +33,7 @@ class TestAdminAPI:
     def test_update_admin(self):
         update_data = {
             "first_name": 'admin1', "phone": '01012070620',
-            "username": 'admin2', "password": 'admin',
+            "password": 'admin',
             "email": 'admin1@gmail.com'
         }
         response = self.client.put(
@@ -43,7 +43,7 @@ class TestAdminAPI:
     def test_retrieve_admin(self):
         update_data = {
             "first_name": 'admin1', "phone": '01012070620',
-            "username": 'admin2', "password": 'admin',
+            "password": 'admin',
             "email": 'admin1@gmail.com'
         }
         response = self.client.patch(
@@ -60,7 +60,7 @@ class TestManagerAPI:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.manager = Manager.objects.create(
-            first_name='manager1', phone='01012070620', username='manager1',
+            first_name='manager1', phone='01012070620',
             password='manager', email='manager1@gmail.com')
         self.client = Client()
         self.url_list = reverse("managers-list")
@@ -73,7 +73,7 @@ class TestManagerAPI:
     def test_create_manager(self):
         data = {
             "first_name": 'manager1', "phone": '01012070620',
-            "username": 'manager2', "password": 'manager',
+            "password": 'manager',
             "email": 'manager1@gmail.com'
         }
         response = self.client.post(self.url_list,
@@ -83,7 +83,7 @@ class TestManagerAPI:
     def test_update_manager(self):
         update_data = {
             "first_name": 'manager1', "phone": '01012070620',
-            "username": 'manager2', "password": 'manager',
+            "password": 'manager',
             "email": 'manager@gmail.com'
         }
         response = self.client.put(
@@ -93,7 +93,7 @@ class TestManagerAPI:
     def test_retrieve_manager(self):
         update_data = {
             "first_name": 'manager1', "phone": '01012070620',
-            "username": 'manager2', "password": 'manager1',
+            "password": 'manager1',
             "email": 'manager1@gmail.com'
         }
         response = self.client.patch(
@@ -110,7 +110,7 @@ class TestTeacherAPI:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.teacher = Teacher.objects.create(
-            first_name='teacher1', phone='01012070620', username='teacher1',
+            first_name='teacher1', phone='01012070620',
             password='teacher', email='teacher1@gmail.com', address='address1')
         self.client = Client()
         self.url_list = reverse("teachers-list")
@@ -123,7 +123,7 @@ class TestTeacherAPI:
     def test_create_teacher(self):
         data = {
             "first_name": 'teacher1', "phone": '01012070620',
-            "username": 'teacher2', "password": 'teacher',
+            "password": 'teacher',
             "email": 'teacher1@gmail.com', "address": 'address1'
         }
         response = self.client.post(self.url_list,
@@ -133,7 +133,7 @@ class TestTeacherAPI:
     def test_update_teacher(self):
         update_data = {
             "first_name": 'teacher1', "phone": '01012070620',
-            "username": 'teacher2', "password": 'teacher',
+            "password": 'teacher',
             "email": 'teacher1@gmail.com', "address": 'address'
         }
         response = self.client.put(
@@ -143,7 +143,7 @@ class TestTeacherAPI:
     def test_retrieve_teacher(self):
         update_data = {
             "first_name": 'teacher1', "phone": '01012070620',
-            "username": 'teacher2', "password": 'teacher1',
+            "password": 'teacher1',
             "email": 'teacher1@gmail.com', "address": 'address1'
         }
         response = self.client.patch(
@@ -160,7 +160,7 @@ class TestStudentAPI:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.student = Student.objects.create(
-            first_name='student1', phone='01012070620', username='student1',
+            first_name='student1', phone='01012070620',
             password='student', email='student1@gmail.com',
             address='address1', parent_phone='01102015693')
         self.client = Client()
@@ -173,8 +173,8 @@ class TestStudentAPI:
 
     def test_create_student(self):
         data = {
-            "first_name": 'studnet1', "phone": '01012070620',
-            "username": 'student2', "password": 'student',
+            "first_name": 'student1', "phone": '01012070620',
+            "password": 'student',
             "email": 'student1@gmail.com',
             "address": 'address1', "parent_phone": '01102015693'
         }
@@ -185,7 +185,7 @@ class TestStudentAPI:
     def test_update_student(self):
         update_data = {
             "first_name": 'student1', "phone": '01012070620',
-            "username": 'student2', "password": 'student',
+            "password": 'student',
             "email": 'student1@gmail.com',
             "address": 'address', "parent_phone": '01102015693'
         }
@@ -196,7 +196,7 @@ class TestStudentAPI:
     def test_retrieve_student(self):
         update_data = {
             "first_name": 'student1', "phone": '01012070620',
-            "username": 'student2', "password": 'student1',
+            "password": 'student1',
             "email": 'student1@gmail.com',
             "address": 'address1', "parent_phone": '01102015693'
         }

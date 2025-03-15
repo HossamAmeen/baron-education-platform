@@ -13,7 +13,7 @@ from users.models import User
 
 
 class RegisterAPI(generics.CreateAPIView):
-    permission_classes = [AllowAny]
+    authentication_classes = []
     serializer_class = StudentRegisterSerializer
 
 

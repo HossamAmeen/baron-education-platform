@@ -24,7 +24,6 @@ class Command(BaseCommand):
             owner = User.objects.create(
                     first_name=fake.name(),
                     phone="01010079798",
-                    username=fake.word() + str(fake.random_int(min=1, max=100)),
                     password=fake.word(),
                     email="hosamameen948@gmail.com"
                 )
@@ -164,7 +163,6 @@ class Command(BaseCommand):
         teacher = Teacher.objects.create(
                     first_name=fake.name(),
                     phone=fake.phone_number(),
-                    username=fake.word() + str(fake.random_int(min=1, max=100)),
                     password=fake.word(),
                     email=fake.email(),
                     address=fake.address()
@@ -174,7 +172,6 @@ class Command(BaseCommand):
             student = Student.objects.create(
                 first_name=fake.name(),
                 phone="01010079796",
-                username=fake.word() + str(fake.random_int(min=1, max=100)),
                 password=fake.word(),
                 email=fake.email(),
                 address=fake.address()

@@ -15,7 +15,6 @@ class CustomUserManager(UserManager):
         return user
 
     def create_superuser(self, email, phone, password=None, **extra_fields):
-        extra_fields.setdefault('username', email)
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -24,7 +23,7 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractUser):
-    date_joined = groups = user_permissions = None
+    date_joined = groups = user_permissions = username = None
     class UserGender(models.TextChoices):
         MALE = 'male', 'ذكر'
         FEMALE = 'female', 'أنثى'

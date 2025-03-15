@@ -47,4 +47,4 @@ class StudentCourseListView(ListAPIView):
     serializer_class = StudentCourseSerializer
 
     def get_queryset(self):
-        return Course.objects.filter(student=self.request.user)
+        return Course.objects.filter(student_courses__student=self.request.user)
