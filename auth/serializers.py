@@ -22,7 +22,6 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password_confirmation']:
             raise serializers.ValidationError(
                 {"password": "Passwords do not match"})
-                
         attrs['password'] = make_password(attrs['password'])
         return attrs
 
