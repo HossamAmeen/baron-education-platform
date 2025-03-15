@@ -6,9 +6,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from auth.models import PasswordReset
-from auth.serializers import (LoginSerializer, ProfileSerializer,
+from auth.serializers import (LoginSerializer,
                               ResetPasswordRequestSerializer,
-                              ResetPasswordSerializer, StudentRegisterSerializer)
+                              ResetPasswordSerializer, StudentRegisterSerializer, updatedStudentProfileSerializer)
 from users.models import User
 
 
@@ -92,8 +92,8 @@ class ResetPassword(generics.GenericAPIView):
             return Response({'error': 'No user found'}, status=404)
 
 
-class ProfileView(generics.GenericAPIView):
-    serializer_class = ProfileSerializer
+class StudentProfileView(generics.GenericAPIView):
+    serializer_class = updatedStudentProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

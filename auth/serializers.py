@@ -1,3 +1,4 @@
+from django.db.models import F
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.hashers import make_password
@@ -59,7 +60,24 @@ class ResetPasswordSerializer(serializers.Serializer):
         return attrs
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class updatedStudentProfileSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+    password_confirmation = serializers.CharField(write_only=True, required=False)
+
+
+    def validate(self, attrs):
+        if attrs.get("password"):
+            if not attrs.get("password_confirmation"):
+                raise serializers.ValidationError(
+                    {"password_confirmation": "This field is required when setting a new password."}
+                )
+            if attrs.get("password") != attrs.get("password_confirmation"):
+                raise serializers.ValidationError(
+                    {"password_confirmation": "Passwords do not match."}
+                )
+            attrs['password'] = make_password(attrs["password"])
+        return attrs
+
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'phone',  'email', 'gender']
+        model = Student
+        fields = ['first_name', 'last_name', 'parent_phone', 'address', 'phone',  'email', 'gender', 'password', 'password_confirmation']
