@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from users.models import User, Student
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'phone', 'parent_phone', 'address')
+    list_display = ('id', 'first_name', 'last_name', 'phone', 'parent_phone')
     search_fields = ('phone', 'parent_phone')
     list_filter = ('phone', 'parent_phone')
 

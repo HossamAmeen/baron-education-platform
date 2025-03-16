@@ -60,11 +60,9 @@ class Manager(User):
 
 
 class Teacher(User):
-    address = models.CharField(max_length=100)
-
+    pass
 
 class Student(User):
-    address = models.CharField(max_length=100)
     parent_phone = models.CharField(max_length=50)
 
     class Meta:

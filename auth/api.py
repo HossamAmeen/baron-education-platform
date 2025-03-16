@@ -101,7 +101,7 @@ class StudentProfileView(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request):
-        serializer = self.serializer_class(request.user, data=request.data)
+        serializer = self.serializer_class(request.user.student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

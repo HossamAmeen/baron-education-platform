@@ -111,7 +111,7 @@ class TestTeacherAPI:
     def setup(self):
         self.teacher = Teacher.objects.create(
             first_name='teacher1', phone='01012070620',
-            password='teacher', email='teacher1@gmail.com', address='address1')
+            password='teacher', email='teacher1@gmail.com')
         self.client = Client()
         self.url_list = reverse("teachers-list")
         self.url_detail = reverse("teachers-detail", args=[self.teacher.id])
@@ -124,7 +124,7 @@ class TestTeacherAPI:
         data = {
             "first_name": 'teacher1', "phone": '01012070620',
             "password": 'teacher',
-            "email": 'teacher1@gmail.com', "address": 'address1'
+            "email": 'teacher1@gmail.com'
         }
         response = self.client.post(self.url_list,
                                     data=data, content_type='application/json')
@@ -134,7 +134,7 @@ class TestTeacherAPI:
         update_data = {
             "first_name": 'teacher1', "phone": '01012070620',
             "password": 'teacher',
-            "email": 'teacher1@gmail.com', "address": 'address'
+            "email": 'teacher1@gmail.com'
         }
         response = self.client.put(
             self.url_detail, data=update_data, content_type='application/json')
@@ -144,7 +144,7 @@ class TestTeacherAPI:
         update_data = {
             "first_name": 'teacher1', "phone": '01012070620',
             "password": 'teacher1',
-            "email": 'teacher1@gmail.com', "address": 'address1'
+            "email": 'teacher1@gmail.com'
         }
         response = self.client.patch(
             self.url_detail, data=update_data, content_type='application/json')
@@ -162,7 +162,7 @@ class TestStudentAPI:
         self.student = Student.objects.create(
             first_name='student1', phone='01012070620',
             password='student', email='student1@gmail.com',
-            address='address1', parent_phone='01102015693')
+            parent_phone='01102015693')
         self.client = Client()
         self.url_list = reverse("students-list")
         self.url_detail = reverse("students-detail", args=[self.student.id])
@@ -176,7 +176,7 @@ class TestStudentAPI:
             "first_name": 'student1', "phone": '01012070620',
             "password": 'student',
             "email": 'student1@gmail.com',
-            "address": 'address1', "parent_phone": '01102015693'
+            "parent_phone": '01102015693'
         }
         response = self.client.post(self.url_list,
                                     data=data, content_type='application/json')
@@ -187,7 +187,7 @@ class TestStudentAPI:
             "first_name": 'student1', "phone": '01012070620',
             "password": 'student',
             "email": 'student1@gmail.com',
-            "address": 'address', "parent_phone": '01102015693'
+            "parent_phone": '01102015693'
         }
         response = self.client.put(
             self.url_detail, data=update_data, content_type='application/json')
@@ -198,7 +198,7 @@ class TestStudentAPI:
             "first_name": 'student1', "phone": '01012070620',
             "password": 'student1',
             "email": 'student1@gmail.com',
-            "address": 'address1', "parent_phone": '01102015693'
+            "parent_phone": '01102015693'
         }
         response = self.client.patch(
             self.url_detail, data=update_data, content_type='application/json')

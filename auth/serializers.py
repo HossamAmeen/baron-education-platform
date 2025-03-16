@@ -80,4 +80,4 @@ class updatedStudentProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['first_name', 'last_name', 'parent_phone', 'address', 'phone',  'email', 'gender', 'password', 'password_confirmation']
+        fields = ['first_name', 'last_name', 'parent_phone', 'phone',  'email', 'gender', 'password', 'password_confirmation']

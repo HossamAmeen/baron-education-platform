@@ -164,8 +164,7 @@ class Command(BaseCommand):
                     first_name=fake.name(),
                     phone=fake.phone_number(),
                     password=fake.word(),
-                    email=fake.email(),
-                    address=fake.address()
+                    email=fake.email()
                 )
         student = Student.objects.filter(phone="01010079796").first()
         if not student:
@@ -173,8 +172,7 @@ class Command(BaseCommand):
                 first_name=fake.name(),
                 phone="01010079796",
                 password=fake.word(),
-                email=fake.email(),
-                address=fake.address()
+                email=fake.email()
             )
         student.set_password("student")
         student.save()
