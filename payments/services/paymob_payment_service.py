@@ -4,15 +4,16 @@ import requests
 class PaymobPaymentService:
     def __init__(self):
         self.PAYMOB_API_KEY = "your_paymob_api_key"
-        self.PAYMOB_IFRAME_URL = "https://accept.paymob.com/api/acceptance/iframe"
+        self.PAYMOB_IFRAME_URL = "https://accept.paymob.com/api/acceptance/iframe"  # noqa
         self.auth_url = "https://accept.paymob.com/api/auth/tokens"
-        self.payment_url = "https://accept.paymob.com/api/acceptance/iframe"
+        self.payment_url = "https://accept.paymob.com/api/acceptance/iframe" # noqa
         self.order_url = "https://accept.paymob.com/api/ecommerce/orders"
         self.headers = {"Content-Type": "application/json"}
         self.payload = {"api_key": self.PAYMOB_API_KEY}
 
     def generate_token(self):
-        response = requests.post(self.auth_url, json=self.payload, headers=self.headers)
+        response = requests.post(self.auth_url, json=self.payload,
+                                 headers=self.headers)
         return response.json().get("token")
 
     def create_paymob_payment(self, currency, amount, user):
@@ -30,7 +31,9 @@ class PaymobPaymentService:
             "items": [],
         }
 
-        order_response = requests.post(self.order_url, json=order_payload, headers=self.headers)
+        order_response = requests.post(
+            self.order_url, json=order_payload, headers=self.headers
+        )
         order_id = order_response.json().get("id")
 
         # Get payment link
@@ -46,10 +49,12 @@ class PaymobPaymentService:
                 "country": "EG",
             },
             "currency": currency,
-            "integration_id": "your_integration_id"
+            "integration_id": "your_integration_id",
         }
 
-        payment_key_response = requests.post(self.payment_url, json=payment_key_payload, headers=self.headers)
+        payment_key_response = requests.post(
+            self.payment_url, json=payment_key_payload, headers=self.headers
+        )
         payment_token = payment_key_response.json().get("token")
 
         payment_url = f"{self.PAYMOB_IFRAME_URL}/{payment_token}"

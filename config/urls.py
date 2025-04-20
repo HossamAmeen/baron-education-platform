@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -21,20 +22,26 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenRefreshView
 
-admin.site.site_header = "Baron Dashboard"       # Main header
-admin.site.site_title = "Baron Dashboard"       # Browser tab title
-admin.site.index_title = "Baron Dashboard"      # Dashboard heading
+admin.site.site_header = "Baron Dashboard"  # Main header
+admin.site.site_title = "Baron Dashboard"  # Browser tab title
+admin.site.index_title = "Baron Dashboard"  # Dashboard heading
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('users/', include('users.urls')),
-    path('courses/', include('course.urls')),
-    path('auth/', include('auth.urls')),
-    path('configuration/', include('configuration.urls')),
-    path('api/token/refresh/', TokenRefreshView.as_view(),
-         name='token_refresh'),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(
-        url_name='schema'), name='swagger-ui')
-
-]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        path("users/", include("users.urls")),
+        path("courses/", include("course.urls")),
+        path("auth/", include("auth.urls")),
+        path("configuration/", include("configuration.urls")),
+        path("api/token/refresh/", TokenRefreshView.as_view(),
+             name="token_refresh"),
+        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+        path(
+            "api/schema/swagger-ui/",
+            SpectacularSwaggerView.as_view(url_name="schema"),
+            name="swagger-ui",
+        ),
+    ]
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)

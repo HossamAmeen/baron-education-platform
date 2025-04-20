@@ -40,7 +40,8 @@ class EducationGrade(TimeStampedModel):
 
 class Semester(TimeStampedModel):
     name = models.CharField(max_length=100)
-    education_grade = models.ForeignKey(EducationGrade, on_delete=models.CASCADE)
+    education_grade = models.ForeignKey(
+        EducationGrade, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Semesters"
@@ -58,7 +59,7 @@ class Subject(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     available = models.BooleanField(default=True)
-    image = models.ImageField(upload_to='media/')
+    image = models.ImageField(upload_to="media/")
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
 
     class Meta:
@@ -70,8 +71,8 @@ class Subject(TimeStampedModel):
 
 class Course(TimeStampedModel):
     class CurrencyCHOICES(models.TextChoices):
-        EGP = 'EGP'
-        KSA = 'KSA'
+        EGP = "EGP"
+        KSA = "KSA"
 
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
@@ -80,8 +81,10 @@ class Course(TimeStampedModel):
     hours_count = models.IntegerField()
     duration = models.IntegerField()
     price = models.IntegerField()
-    currency = models.CharField(max_length=3, choices=CurrencyCHOICES.choices, default=CurrencyCHOICES.EGP)
-    image = models.ImageField(upload_to='media/')
+    currency = models.CharField(
+        max_length=3, choices=CurrencyCHOICES.choices, default=CurrencyCHOICES.EGP
+    )
+    image = models.ImageField(upload_to="media/")
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
@@ -96,7 +99,7 @@ class Lesson(TimeStampedModel):
     title = models.CharField(max_length=100)
     date = models.DateField()
     time = models.TimeField()
-    explanation_file = models.FileField(upload_to='media/')
+    explanation_file = models.FileField(upload_to="media/")
     test_link = models.URLField()
     video_link = models.URLField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -109,8 +112,10 @@ class Lesson(TimeStampedModel):
 
 
 class StudentCourse(TimeStampedModel):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE,
-                               related_name='student_courses')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,
-                                related_name='student_courses')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name="student_courses"
+    )
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, related_name="student_courses"
+    )
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)

@@ -6,40 +6,44 @@ from rest_framework.viewsets import ModelViewSet
 from course.models import Course
 from course.serializers import StudentCourseSerializer
 from users.models import Admin, Manager, Student, Teacher
-from users.serializers import (AdminSerializer, ManagerSerializer,
-                               StudentSerializer, TeacherSerializer)
+from users.serializers import (
+    AdminSerializer,
+    ManagerSerializer,
+    StudentSerializer,
+    TeacherSerializer,
+)
 
 
 class AdminViewSet(ModelViewSet):
     schema = None
-    queryset = Admin.objects.order_by('-id')
+    queryset = Admin.objects.order_by("-id")
     serializer_class = AdminSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['full_name', 'email']
+    search_fields = ["full_name", "email"]
 
 
 class TeacherViewSet(ModelViewSet):
     schema = None
-    queryset = Teacher.objects.order_by('-id')
+    queryset = Teacher.objects.order_by("-id")
     serializer_class = TeacherSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['full_name', 'email']
+    search_fields = ["full_name", "email"]
 
 
 class StudentViewSet(ModelViewSet):
     schema = None
-    queryset = Student.objects.order_by('-id')
+    queryset = Student.objects.order_by("-id")
     serializer_class = StudentSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['full_name', 'email']
+    search_fields = ["full_name", "email"]
 
 
 class ManagerViewSet(ModelViewSet):
     schema = None
-    queryset = Manager.objects.order_by('-id')
+    queryset = Manager.objects.order_by("-id")
     serializer_class = ManagerSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['full_name', 'email']
+    search_fields = ["full_name", "email"]
 
 
 class StudentCourseListView(ListAPIView):
@@ -47,4 +51,5 @@ class StudentCourseListView(ListAPIView):
     serializer_class = StudentCourseSerializer
 
     def get_queryset(self):
-        return Course.objects.filter(student_courses__student=self.request.user)
+        return Course.objects.filter(
+            student_courses__student=self.request.user)

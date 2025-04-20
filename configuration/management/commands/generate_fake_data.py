@@ -7,14 +7,24 @@ from django.core.management.base import BaseCommand
 from faker import Faker
 
 from configuration.models import Configuration, Review, Slider
-from course.models import (Country, Course, EducationGrade, EducationStage,
-                           Lesson, Semester, Student, Subject, Teacher, StudentCourse)
-from users.models import User
+from course.models import (
+    Country,
+    Course,
+    EducationGrade,
+    EducationStage,
+    Lesson,
+    Semester,
+    Student,
+    StudentCourse,
+    Subject,
+    Teacher,
+)
 from payments.models import Transaction
+from users.models import User
 
 
 class Command(BaseCommand):
-    help = 'Generates 20 rows of garbage data for the Review model'
+    help = "Generates 20 rows of garbage data for the Review model"
 
     def handle(self, *args, **kwargs):
         fake = Faker()
@@ -22,11 +32,11 @@ class Command(BaseCommand):
         owner = User.objects.filter(email="hosamameen948@gmail.com")
         if not owner.exists():
             owner = User.objects.create(
-                    first_name=fake.name(),
-                    phone="01010079798",
-                    password=fake.word(),
-                    email="hosamameen948@gmail.com"
-                )
+                first_name=fake.name(),
+                phone="01010079798",
+                password=fake.word(),
+                email="hosamameen948@gmail.com",
+            )
             owner.set_password("admin")
             owner.save()
 
@@ -49,12 +59,14 @@ class Command(BaseCommand):
             footer_description=fake.text(),
         )
 
-        self.stdout.write(self.style.SUCCESS(f'Configuration row with ID {config.id} created!'))
+        self.stdout.write(
+            self.style.SUCCESS(f"Configuration row with ID {config.id} created!")
+        )
 
         self.generate_reviews(fake)
         self.generate_sliders(fake)
         semesters = self.generate_semesters(fake)
-        subjects =self.generate_subjects(fake, semesters)
+        subjects = self.generate_subjects(fake, semesters)
         self.generate_courses_and_lessons(fake, subjects)
 
     def generate_sliders(self, fake):
@@ -67,21 +79,15 @@ class Command(BaseCommand):
             image_url = fake.image_url()
             image_response = requests.get(image_url)
 
-            slider = Slider(
-                description=description,
-                ordering=ordering,
-                link=link
-            )
+            slider = Slider(description=description, ordering=ordering, link=link)
 
             # Save image to ImageField
             if image_response.status_code == 200:
                 slider.image.save(
-                    f'{fake.word()}.jpg', 
-                    ContentFile(image_response.content), 
-                    save=True
+                    f"{fake.word()}.jpg", ContentFile(image_response.content), save=True
                 )
 
-            self.stdout.write(self.style.SUCCESS(f'Slider {slider.id} created!'))
+            self.stdout.write(self.style.SUCCESS(f"Slider {slider.id} created!"))
 
     def generate_reviews(self, fake):
         for _ in range(20):
@@ -89,43 +95,54 @@ class Command(BaseCommand):
                 name=fake.name(),
                 description=fake.text(),
                 rate=fake.random_int(min=1, max=5),
-                ordering=fake.random_int(min=1, max=100)
-        )
+                ordering=fake.random_int(min=1, max=100),
+            )
 
     def generate_semesters(self, fake):
-         # Create fixed countries
+        # Create fixed countries
         egypt, _ = Country.objects.get_or_create(name="Egypt", code="EG")
         saudi_arabia, _ = Country.objects.get_or_create(name="Saudi Arabia", code="SA")
 
-        self.stdout.write(self.style.SUCCESS(f'Fixed Country: {egypt.name} (EG)'))
-        self.stdout.write(self.style.SUCCESS(f'Fixed Country: {saudi_arabia.name} (SA)'))
+        self.stdout.write(self.style.SUCCESS(f"Fixed Country: {egypt.name} (EG)"))
+        self.stdout.write(
+            self.style.SUCCESS(f"Fixed Country: {saudi_arabia.name} (SA)")
+        )
 
         # Generate Education Stages for fixed countries
         for country in [egypt, saudi_arabia]:
             for _ in range(3):
                 stage = EducationStage.objects.create(
-                    name=fake.word() + " Stage",
-                    country=country
+                    name=fake.word() + " Stage", country=country
                 )
-                self.stdout.write(self.style.SUCCESS(f'  ↳ Created Education Stage: {stage.name} in {country.name}'))
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"  ↳ Created Education Stage: {stage.name} in {country.name}"
+                    )
+                )
 
                 # Generate Education Grades for each Stage
                 for _ in range(3):
                     grade = EducationGrade.objects.create(
-                        name=fake.word() + " Grade",
-                        education_stage=stage
+                        name=fake.word() + " Grade", education_stage=stage
                     )
-                    self.stdout.write(self.style.SUCCESS(f'Created Education Grade: {grade.name} in {stage.name}'))
+                    self.stdout.write(
+                        self.style.SUCCESS(
+                            f"Created Education Grade: {grade.name} in {stage.name}"
+                        )
+                    )
 
                     # Generate Semesters for each Grade
                     for i in range(2):
                         semester = Semester.objects.create(
-                            name=f"Semester {i + 1}",
-                            education_grade=grade
+                            name=f"Semester {i + 1}", education_grade=grade
                         )
-                        self.stdout.write(self.style.SUCCESS(f'Created Semester: {semester.name} in {grade.name}'))
+                        self.stdout.write(
+                            self.style.SUCCESS(
+                                f"Created Semester: {semester.name} in {grade.name}"
+                            )
+                        )
 
-        self.stdout.write(self.style.SUCCESS('Fake data generation complete! 🎉'))
+        self.stdout.write(self.style.SUCCESS("Fake data generation complete! 🎉"))
         return Semester.objects.all()
 
     def generate_subjects(self, fake, semesters):
@@ -145,34 +162,32 @@ class Command(BaseCommand):
                 name=name,
                 description=description,
                 available=available,
-                semester=semester
+                semester=semester,
             )
 
             # Save image to ImageField
             if image_response.status_code == 200:
                 subject.image.save(
-                    f'{fake.word()}.png', 
-                    ContentFile(image_response.content), 
-                    save=True
+                    f"{fake.word()}.png", ContentFile(image_response.content), save=True
                 )
             else:
                 subject.save()
         return Subject.objects.all()
-    
+
     def generate_courses_and_lessons(self, fake, subjects):
         teacher = Teacher.objects.create(
-                    first_name=fake.name(),
-                    phone=fake.phone_number(),
-                    password=fake.word(),
-                    email=fake.email()
-                )
+            first_name=fake.name(),
+            phone=fake.phone_number(),
+            password=fake.word(),
+            email=fake.email(),
+        )
         student = Student.objects.filter(phone="01010079796").first()
         if not student:
             student = Student.objects.create(
                 first_name=fake.name(),
                 phone="01010079796",
                 password=fake.word(),
-                email=fake.email()
+                email=fake.email(),
             )
         student.set_password("student")
         student.save()
@@ -185,14 +200,16 @@ class Command(BaseCommand):
                 name=name,
                 description=description,
                 available=available,
-                start_date=fake.date_between(start_date=date(2025,4, 1), end_date="+1y"),
+                start_date=fake.date_between(
+                    start_date=date(2025, 4, 1), end_date="+1y"
+                ),
                 hours_count=fake.random_int(min=1, max=100),
                 duration=fake.random_int(min=1, max=100),
                 price=fake.random_int(min=1, max=100),
                 currency=fake.random_element(elements=Course.CurrencyCHOICES),
                 image=subject.image,
                 teacher=teacher,
-                subject=subject
+                subject=subject,
             )
             if available:
                 transaction = Transaction.objects.create(
@@ -202,16 +219,18 @@ class Command(BaseCommand):
                     gateway_transaction_id="asd",
                     status=fake.random_element(elements=Transaction.TransactionStatus),
                 )
-                StudentCourse.objects.create(student=student, course=course, transaction=transaction)
+                StudentCourse.objects.create(
+                    student=student, course=course, transaction=transaction
+                )
 
             for _ in range(10):
                 lesson = Lesson.objects.create(
                     title=fake.sentence(nb_words=6),
-                    date=fake.date_between(start_date=date(2025,4, 1), end_date="+1y"),
+                    date=fake.date_between(start_date=date(2025, 4, 1), end_date="+1y"),
                     time=fake.time_object(),
                     explanation_file=f"media/{fake.file_name(extension='pdf')}",
                     test_link=fake.url(),
                     video_link=fake.url(),
                     course=course,
                 )
-        self.stdout.write(self.style.SUCCESS(f'generate courses and lessons'))
+        self.stdout.write(self.style.SUCCESS(f"generate courses and lessons"))

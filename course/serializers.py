@@ -1,7 +1,15 @@
 from rest_framework import serializers
 
-from course.models import (Country, Course, EducationGrade, EducationStage,
-                           Group, Lesson, Semester, Subject)
+from course.models import (
+    Country,
+    Course,
+    EducationGrade,
+    EducationStage,
+    Group,
+    Lesson,
+    Semester,
+    Subject,
+)
 from payments.models import Transaction
 
 
@@ -9,21 +17,21 @@ class SemesterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Semester
-        fields = '__all__'
+        fields = "__all__"
 
 
 class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = '__all__'
+        fields = "__all__"
 
 
 class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = '__all__'
+        fields = "__all__"
 
 
 class EducationGradeSerializer(serializers.ModelSerializer):
@@ -47,21 +55,28 @@ class CountrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Country
-        fields = '__all__'
+        fields = "__all__"
 
 
 class SingleCouurseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'name']
+        fields = ["id", "name"]
 
 
 class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ['id', 'title', 'date', 'time', 'explanation_file',
-                  'test_link', 'video_link']
+        fields = [
+            "id",
+            "title",
+            "date",
+            "time",
+            "explanation_file",
+            "test_link",
+            "video_link",
+        ]
 
 
 class RetrieveCourseSerializer(serializers.ModelSerializer):
@@ -70,13 +85,30 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration', 'price',
-                  'currency', 'image', 'lessons', 'is_paid']
+        fields = [
+            "id",
+            "name",
+            "description",
+            "start_date",
+            "hours_count",
+            "duration",
+            "price",
+            "currency",
+            "image",
+            "lessons",
+            "is_paid",
+        ]
 
     def get_is_paid(self, obj):
-        user = self.context['request'].user
-        if user and user.is_authenticated  and user.get_role() == "student" and obj.student_courses.filter(
-                student=user, transaction__status=Transaction.TransactionStatus.PAID).exists():
+        user = self.context["request"].user
+        if (
+            user
+            and user.is_authenticated
+            and user.get_role() == "student"
+            and obj.student_courses.filter(
+                student=user, transaction__status=Transaction.TransactionStatus.PAID
+            ).exists()
+        ):
             return True
         return False
 
@@ -90,9 +122,17 @@ class ListCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'start_date', 'hours_count', 'duration',
-                  'price', 'currency', 'image']
-
+        fields = [
+            "id",
+            "name",
+            "description",
+            "start_date",
+            "hours_count",
+            "duration",
+            "price",
+            "currency",
+            "image",
+        ]
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -100,11 +140,28 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ['id', 'name', 'available', 'image', 'semester', 'available', 'available_course']
+        fields = [
+            "id",
+            "name",
+            "available",
+            "image",
+            "semester",
+            "available",
+            "available_course",
+        ]
 
 
 class StudentCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'start_date', 'hours_count',
-                  'duration', 'price', 'currency', 'image']
+        fields = [
+            "id",
+            "name",
+            "description",
+            "start_date",
+            "hours_count",
+            "duration",
+            "price",
+            "currency",
+            "image",
+        ]
