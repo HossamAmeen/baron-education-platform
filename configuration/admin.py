@@ -24,7 +24,7 @@ class ConfigurationAdmin(admin.ModelAdmin):
     list_display = ('id', 'eg_number', 'ksa_number', 'eg_adderss', 'ksa_adderss', 'email', 'about_us', 'our_vision', 'our_mission', 'student_counter', 'teacher_counter', 'partner_counter', 'meta', 'twitter', 'linkedin', 'googel', 'footer_description')
     search_fields = ('email', 'twitter', 'linkedin', 'googel', 'meta')
     list_filter = ('email',)
-# Register your models here.
+
 admin.site.register(Slider, SliderAdmin)
 admin.site.register(ContactUs, ContactUsAdmin)
 admin.site.register(Review, ReviewAdmin)
