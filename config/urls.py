@@ -19,8 +19,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView)
+from rest_framework_simplejwt.views import TokenRefreshView
+
+admin.site.site_header = "Baron Dashboard"       # Main header
+admin.site.site_title = "Baron Dashboard"       # Browser tab title
+admin.site.index_title = "Baron Dashboard"      # Dashboard heading
 
 urlpatterns = [
     path('admin/', admin.site.urls),
