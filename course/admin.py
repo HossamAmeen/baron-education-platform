@@ -14,19 +14,14 @@ class EducationStageAdmin(admin.ModelAdmin):
     list_filter = ('country',)
 
 class EducationGradeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'education_stage')
+    list_display = ('id', 'name', 'education_stage', 'education_stage__country')
     search_fields = ('name',)
-    list_filter = ('education_stage',)
+    list_filter = ('education_stage', 'education_stage__country')
 
 class SemesterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'education_grade')
+    list_display = ('id', 'name', 'education_grade', 'education_grade__education_stage', 'education_grade__education_stage__country')
     search_fields = ('name',)
-    list_filter = ('education_grade',)
-
-# class SubjectAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name', 'semester', 'grade', 'stage', 'country')
-#     search_fields = ('name',)
-#     list_filter = ('semester', 'grade', 'stage', 'country')
+    list_filter = ('education_grade', 'education_grade__education_stage', 'education_grade__education_stage__country')
 
 # Register your models here.
 admin.site.register(Country, CountryAdmin)
