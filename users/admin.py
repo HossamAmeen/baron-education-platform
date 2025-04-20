@@ -11,6 +11,14 @@ class UserForm(forms.ModelForm):
         model = User
         exclude = ('is_superuser', 'is_staff', 'role', 'last_login', 'groups', 'user_permissions')
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
+
+
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('id', 'first_name', 'last_name', 'phone', 'parent_phone')
     search_fields = ('phone', 'parent_phone')
