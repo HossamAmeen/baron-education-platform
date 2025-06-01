@@ -1,61 +1,80 @@
 import requests
+import json
+from config import settings
 
 
 class PaymobPaymentService:
-    def __init__(self):
-        self.PAYMOB_API_KEY = "your_paymob_api_key"
-        self.PAYMOB_IFRAME_URL = "https://accept.paymob.com/api/acceptance/iframe"  # noqa
-        self.auth_url = "https://accept.paymob.com/api/auth/tokens"
-        self.payment_url = "https://accept.paymob.com/api/acceptance/iframe" # noqa
-        self.order_url = "https://accept.paymob.com/api/ecommerce/orders"
+    def __init__(self, currency="SAR"):
+        self.PAYMOB_API_KEY = ""
+        self.PAYMOB_IFRAME_URL = (
+            "https://ksa.paymob.com/unifiedcheckout/?publicKey={}&clientSecret={}"
+        )
         self.headers = {"Content-Type": "application/json"}
-        self.payload = {"api_key": self.PAYMOB_API_KEY}
+        self.intention_url = "https://ksa.paymob.com/v1/intention/"
+        self.public_key = settings.PAYMOB_PUBLIC_KEY
+        self.private_key = settings.PAYMOB_PRIVATE_KEY
+        self.payment_methods = [9395]
+        self.currency = currency
 
-    def generate_token(self):
-        response = requests.post(self.auth_url, json=self.payload,
-                                 headers=self.headers)
-        return response.json().get("token")
 
-    def create_paymob_payment(self, currency, amount, user):
-        payment_url = f"{self.PAYMOB_IFRAME_URL}/asdasdasdpl';ccxcv"
-        return payment_url
+    def get_iframe_url(self, client_secret):
+        return self.PAYMOB_IFRAME_URL.format(self.public_key, client_secret)
 
-        token = self.generate_token()
-
-        # Create an order
-        order_payload = {
-            "auth_token": token,
-            "delivery_needed": False,
-            "amount_cents": str(int(amount * 100)),
-            "currency": currency,
-            "items": [],
-        }
-
-        order_response = requests.post(
-            self.order_url, json=order_payload, headers=self.headers
+    def create_paymob_intention(
+        self,
+        customer=None,
+        amount=None,
+        course=None,
+        reference_id=None,
+        transaction=None,
+    ):
+        payload = json.dumps(
+            {
+                "amount": amount * 100,
+                "currency": self.currency,
+                "payment_methods": self.payment_methods,
+                "items": [
+                    {
+                        "name": course.name,
+                        "amount": amount * 100,
+                        "description": course.description,
+                        "quantity": 1,
+                    }
+                ],
+                "billing_data": {
+                    "apartment": "6",
+                    "first_name": "Ammar",
+                    "last_name": "Sadek",
+                    "street": "938, Al-Jadeed Bldg",
+                    "building": "939",
+                    "phone_number": "+96824480228",
+                    "country": "KSA",
+                    "email": "AmmarSadek@gmail.com",
+                    "floor": "1",
+                    "state": "Alkhuwair",
+                },
+                "customer": {
+                    "first_name": "Ammar",
+                    "last_name": "Sadek",
+                    "email": "AmmarSadek@gmail.com",
+                    "extras": {"re": "22"},
+                },
+                "extras": {"ee": 22},
+                "special_reference": f"transaction_id:{reference_id}",
+                "notification_url": f"{settings.PAYMOB_CALLBACK_URL}/payments/paymob/callback/",
+                "redirection_url": "https://baronlearning.com/courses",
+            }
         )
-        order_id = order_response.json().get("id")
-
-        # Get payment link
-        payment_key_payload = {
-            "auth_token": token,
-            "amount_cents": str(int(amount * 100)),
-            "expiration": 3600,
-            "order_id": order_id,
-            "billing_data": {
-                "first_name": user.full_name,
-                "email": user.email,
-                "phone_number": user.phone_number,
-                "country": "EG",
-            },
-            "currency": currency,
-            "integration_id": "your_integration_id",
+        headers = {
+            "Authorization": f"Token {self.private_key}",
+            "Content-Type": "application/json",
         }
-
-        payment_key_response = requests.post(
-            self.payment_url, json=payment_key_payload, headers=self.headers
+        response = requests.request(
+            "POST", self.intention_url, headers=headers, data=payload
         )
-        payment_token = payment_key_response.json().get("token")
-
-        payment_url = f"{self.PAYMOB_IFRAME_URL}/{payment_token}"
-        return payment_url
+        if response.status_code != 201:
+            return response.status_code, None
+        client_secret = response.json().get("client_secret")
+        transaction.client_secret = client_secret
+        transaction.save()
+        return response.status_code, self.get_iframe_url(client_secret)

@@ -22,6 +22,7 @@ class RegisterAPI(generics.CreateAPIView):
 
 
 class LoginAPI(generics.CreateAPIView):
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
 

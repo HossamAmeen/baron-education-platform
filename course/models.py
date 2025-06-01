@@ -72,7 +72,7 @@ class Subject(TimeStampedModel):
 class Course(TimeStampedModel):
     class CurrencyCHOICES(models.TextChoices):
         EGP = "EGP"
-        KSA = "KSA"
+        SAR = "SAR"
 
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
@@ -118,4 +118,4 @@ class StudentCourse(TimeStampedModel):
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name="student_courses"
     )
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name="student_courses")

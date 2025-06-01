@@ -1,14 +1,11 @@
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
+from shared.constants import CurrencyCHOICES
 from users.models import User
 
 
 class Transaction(TimeStampedModel):
-    class CurrencyCHOICES(models.TextChoices):
-        EGP = "EGP"
-        KSA = "KSA"
-
     class TransactionStatus(models.TextChoices):
         PENDING = "pending"
         PAID = "paid"
@@ -25,4 +22,6 @@ class Transaction(TimeStampedModel):
         choices=TransactionStatus.choices,
         default=TransactionStatus.PENDING,
     )
+    client_secret = models.CharField(max_length=255, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reference_id = models.CharField(max_length=255, blank=True, null=True)

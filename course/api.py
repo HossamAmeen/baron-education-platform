@@ -15,6 +15,7 @@ from course.models import (
     Group,
     Lesson,
     Semester,
+    StudentCourse,
     Subject,
 )
 from course.serializers import (
@@ -107,26 +108,36 @@ class CoursePaymentView(APIView):
                 {"message": "Course not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        # check old valid payment
         transaction = Transaction.objects.filter(
-            user=request.user, status=Transaction.TransactionStatus.PENDING
+            user=request.user,
+            student_courses__course=course
         ).first()
         if transaction:
+            if transaction.status == Transaction.TransactionStatus.PAID:
+                return Response(
+                    {"message": "You already paid for this course",
+                    "data": {"transaction_id": transaction.id}},
+                    status=status.HTTP_200_OK,
+                )
+            payment_service = PaymobPaymentService()
+            iframe_url = payment_service.get_iframe_url(transaction.client_secret)
             return Response(
-                {"message": "You already paid for this course"},
-                status=status.HTTP_200_OK,
-            )
+                {"data": {"iframe_url": iframe_url}}, status=status.HTTP_200_OK)
+                
         else:
             transaction = Transaction.objects.create(
                 status="pending", user=request.user, amount=course.price
             )
-
+            StudentCourse.objects.create(
+                student_id=request.user.id, course=course, transaction=transaction
+            )
         # Generate Paymob payment link
-        payment_url = PaymobPaymentService.create_paymob_payment(
-            course, request.user)
+        payment_service = PaymobPaymentService()
+        status_code,iframe_url = payment_service.create_paymob_intention(
+            amount=course.price, customer=request.user, course=course, reference_id=transaction.id, transaction=transaction)
 
         return Response(
-            {"data": {"payment_url": payment_url}}, status=status.HTTP_200_OK
+            {"data": {"iframe_url": iframe_url}}, status=status_code
         )
 
 
