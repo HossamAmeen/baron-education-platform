@@ -32,9 +32,9 @@ urlpatterns = (
         path("users/", include("users.urls")),
         path("courses/", include("course.urls")),
         path("auth/", include("auth.urls")),
+        path("payments/", include("payments.urls")),
         path("configuration/", include("configuration.urls")),
-        path("api/token/refresh/", TokenRefreshView.as_view(),
-             name="token_refresh"),
+        path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
         path(
             "api/schema/swagger-ui/",

@@ -40,8 +40,7 @@ class EducationGrade(TimeStampedModel):
 
 class Semester(TimeStampedModel):
     name = models.CharField(max_length=100)
-    education_grade = models.ForeignKey(
-        EducationGrade, on_delete=models.CASCADE)
+    education_grade = models.ForeignKey(EducationGrade, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Semesters"
@@ -118,4 +117,6 @@ class StudentCourse(TimeStampedModel):
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name="student_courses"
     )
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name="student_courses")
+    transaction = models.ForeignKey(
+        Transaction, on_delete=models.CASCADE, related_name="student_courses"
+    )

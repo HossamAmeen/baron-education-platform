@@ -18,7 +18,6 @@ urlpatterns = router.urls
 
 urlpatterns = [
     path(
-        "student/courses/", StudentCourseListView.as_view(),
-        name="student-course-list"
+        "student/courses/", StudentCourseListView.as_view(), name="student-course-list"
     ),
 ]

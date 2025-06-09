@@ -12,8 +12,7 @@ class Transaction(TimeStampedModel):
         FAILED = "failed"
 
     currency = models.CharField(
-        max_length=3, choices=CurrencyCHOICES.choices,
-        default=CurrencyCHOICES.EGP
+        max_length=3, choices=CurrencyCHOICES.choices, default=CurrencyCHOICES.EGP
     )
     gateway_transaction_id = models.CharField(max_length=255, blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)

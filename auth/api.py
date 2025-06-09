@@ -34,10 +34,11 @@ class LoginAPI(generics.CreateAPIView):
             Q(email=serializer.validated_data["username"])
             | Q(phone=serializer.validated_data["username"])
         ).first()
-        if not user or not user.check_password(serializer.validated_data["password"]):  # noqa
+        if not user or not user.check_password(
+            serializer.validated_data["password"]
+        ):  # noqa
             return Response(
-                {"error": "Invalid credentials"},
-                status=status.HTTP_401_UNAUTHORIZED
+                {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
             )
         tokens = RefreshToken.for_user(user)
         return Response(
@@ -62,8 +63,7 @@ class RequestPasswordReset(generics.GenericAPIView):
         if user:
             if PasswordReset.objects.filter(email=user.email).count() > 2:
                 return Response(
-                    {"message": "we send url to your email."},
-                    status=status.HTTP_200_OK
+                    {"message": "we send url to your email."}, status=status.HTTP_200_OK
                 )
 
             token = PasswordResetTokenGenerator().make_token(user)

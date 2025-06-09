@@ -15,12 +15,7 @@ environ.Env.read_env(".env")
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG", default=False)
 
-ALLOWED_HOSTS = [
-    "baron-api.egypal.fr",
-    "127.0.0.1",
-    "localhost",
-    "api.baronlearning.com",
-]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1"])
 
 if os.getenv("ENVIRONMENT") != "local":
     sentry_sdk.init(
