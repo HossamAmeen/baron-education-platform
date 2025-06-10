@@ -1,16 +1,12 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from course.api import (
     CountryListAPIView,
-    CoursePaymentView,
     CourseViweSet,
     EducationStageViewSet,
     GroupViewSet,
     LessonViewSet,
-    PaymentCallbackView,
     SemesterViewSet,
     SubjectViewSet,
 )
@@ -28,11 +24,4 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path("countries/", CountryListAPIView.as_view(), name="countries"),
-    path(
-        "course/<int:course_id>/payment/",
-        CoursePaymentView.as_view(),
-        name="course-payment",
-    ),
-    path("payment/callback/", PaymentCallbackView.as_view(),
-         name="payment-callback"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

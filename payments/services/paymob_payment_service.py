@@ -60,13 +60,8 @@ class PaymobPaymentService:
                     "extras": {"re": "22"},
                 },
                 "extras": {"ee": 22},
-<<<<<<< HEAD
                 "special_reference": f"transaction_id:{reference_id}",
                 "notification_url": f"{settings.PAYMOB_CALLBACK_URL}/payments/paymob/callback/",
-=======
-                "special_reference": reference_id,
-                "notification_url": "https://rnfeo-156-209-80-56.a.free.pinggy.link/payments/paymob/callback/",
->>>>>>> 3c5b225 (update with black)
                 "redirection_url": "https://baronlearning.com/courses",
             }
         )
