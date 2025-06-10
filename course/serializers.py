@@ -104,7 +104,7 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
         if (
             user
             and user.is_authenticated
-            and user.get_role() == "student"
+            and user.role == "student"
             and obj.student_courses.filter(
                 student=user, transaction__status=Transaction.TransactionStatus.PAID
             ).exists()
