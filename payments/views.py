@@ -6,11 +6,32 @@ from course.models import Course
 from rest_framework.permissions import IsAuthenticated
 from payments.services.paymob_payment_service import PaymobPaymentService
 from course.models import StudentCourse
+from django.db import transaction
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 
 
 class CoursePaymentView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @transaction.atomic
+    @extend_schema(
+        request=CoursePaymentSerializer,
+        responses={
+            200: OpenApiResponse(
+                description="Payment successful",
+                examples=[
+                    OpenApiExample(
+                        "Payment successful",
+                        value={
+                            "data": {
+                                "iframe_url": "https://example.com/iframe_url"
+                            }
+                        },
+                    )
+                ],
+            )
+        },
+    )
     def post(self, request, course_id):
         course = Course.objects.filter(id=course_id).first()
         if not course:
