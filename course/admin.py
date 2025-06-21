@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Country, EducationGrade, EducationStage, Semester, Subject
+from .models import Country, Course, EducationGrade, EducationStage, Semester, Subject
 
 
 class CountryAdmin(admin.ModelAdmin):
@@ -97,8 +97,23 @@ class SubjectAdmin(admin.ModelAdmin):
     get_country.admin_order_field = "semester__education_grade__education_stage__country"  # Allows sorting by country
 
 
+class CourseAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "name",
+        "description",
+        "available",
+        "start_date",
+        "hours_count",
+        "duration",
+    )
+    search_fields = ("name",)
+    list_filter = ("available",)
+
+
 admin.site.register(Country, CountryAdmin)
 admin.site.register(EducationStage, EducationStageAdmin)
 admin.site.register(EducationGrade, EducationGradeAdmin)
 admin.site.register(Semester, SemesterAdmin)
 admin.site.register(Subject, SubjectAdmin)
+admin.site.register(Course, CourseAdmin)

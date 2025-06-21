@@ -113,7 +113,7 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
         return False
 
     def get_lessons(self, obj):
-        if self.get_is_paid(obj) or 1:
+        if self.get_is_paid(obj):
             return LessonSerializer(obj.lesson_set.all(), many=True).data
         return []
 
