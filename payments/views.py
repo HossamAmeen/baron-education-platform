@@ -15,10 +15,14 @@ class CoursePaymentView(APIView):
 
     @transaction.atomic
     @extend_schema(
-        request=CoursePaymentSerializer,
         responses={
             200: OpenApiResponse(
                 description="Payment successful",
+                response={
+                    "data": {
+                        "iframe_url": "https://example.com/iframe_url"
+                    }
+                },
                 examples=[
                     OpenApiExample(
                         "Payment successful",
