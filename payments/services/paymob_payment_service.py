@@ -62,7 +62,7 @@ class PaymobPaymentService:
                 "extras": {"ee": 22},
                 "special_reference": f"transaction_id:{reference_id}",
                 "notification_url": f"{settings.PAYMOB_CALLBACK_URL}/payments/paymob/callback/",
-                "redirection_url": "https://baronlearning.com/courses",
+                "redirection_url": f"https://baronlearning.com/course-content/{course.id}",
             }
         )
         headers = {

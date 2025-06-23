@@ -84,6 +84,8 @@ class CoursePaymentView(APIView):
 class PaymentCallbackView(APIView):
     def post(self, request):
         paymob_transaction_id = request.data.get("obj", {}).get("id")
+        print(f"Payment callback request data: {request.data}")
+
         transaction_id = (
             request.data.get("obj", {})
             .get("order", {})
