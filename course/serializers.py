@@ -101,7 +101,7 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
             "is_authenticated"
         ]
 
-    def get_is_authenticated():
+    def get_is_authenticated(self, obj):
         user = self.context["request"].user
         return True if user and user.is_authenticated else False
 
