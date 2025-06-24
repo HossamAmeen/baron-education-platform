@@ -67,6 +67,7 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_CHARSET": "utf-8",
 }
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -196,3 +197,23 @@ PAYMOB_PRIVATE_KEY = env("PAYMOB_PRIVATE_KEY")
 DEFAULT_CHARSET = 'utf-8'
 
 FILE_CHARSET = 'utf-8'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/home/egyphjan/baron_api/paymob.log',
+            'encoding': 'utf-8',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+    },
+}

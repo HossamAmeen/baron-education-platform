@@ -8,6 +8,8 @@ from payments.services.paymob_payment_service import PaymobPaymentService
 from course.models import StudentCourse
 from django.db import transaction
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CoursePaymentView(APIView):
@@ -84,7 +86,8 @@ class CoursePaymentView(APIView):
 class PaymentCallbackView(APIView):
     def post(self, request):
         paymob_transaction_id = request.data.get("obj", {}).get("id")
-        print(f"Payment callback request data: {request.data}")
+        logger.info("Payment callback request data: %s", request.data)
+        print(f"Payment callback request data: {str(request.data).encode('utf-8', errors='replace').decode('utf-8')}")
 
         transaction_id = (
             request.data.get("obj", {})
