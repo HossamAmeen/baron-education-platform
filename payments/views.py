@@ -100,6 +100,7 @@ class PaymentCallbackView(APIView):
         try:
             transaction = Transaction.objects.get(id=int(transaction_id))
         except Transaction.DoesNotExist:
+            logger.warning("Transaction not found: %s", transaction_id)
             return Response(
                 {"error": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND
             )
@@ -108,10 +109,12 @@ class PaymentCallbackView(APIView):
             transaction.status = "paid"
             transaction.gateway_transaction_id = paymob_transaction_id
             transaction.save()
+            logger.info("Payment successful: %s", transaction_id)
             return Response({"message": "Payment successful"})
         else:
             transaction.status = "failed"
             transaction.save()
+            logger.info("Payment failed: %s", transaction_id)
             return Response(
                 {"message": "Payment failed"}, status=status.HTTP_400_BAD_REQUEST
             )
