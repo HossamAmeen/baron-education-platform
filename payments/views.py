@@ -9,7 +9,7 @@ from course.models import StudentCourse
 from django.db import transaction
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 import logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("payments")
 
 
 class CoursePaymentView(APIView):

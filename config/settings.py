@@ -199,21 +199,35 @@ DEFAULT_CHARSET = 'utf-8'
 FILE_CHARSET = 'utf-8'
 
 
+import os
+from pathlib import Path
+
+# Create a dedicated payment log file
+PAYMENT_LOG_FILE = os.path.join(BASE_DIR, 'payments.log')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'detailed': {
+            'format': '{asctime} {levelname} {module} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
-        'file': {
+        'payment_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/home/egyphjan/baron_api/paymob.log',
+            'filename': PAYMENT_LOG_FILE,
             'encoding': 'utf-8',
+            'formatter': 'detailed',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
+        'payments': {  # Custom logger name
+            'handlers': ['payment_file'],
             'level': 'DEBUG',
+            'propagate': False,  # Prevent duplicate logs
         },
     },
 }
