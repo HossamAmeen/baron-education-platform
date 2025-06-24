@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Country, Course, EducationGrade, EducationStage, Semester, Subject
+from .models import Country, Course, EducationGrade, EducationStage, Semester, StudentCourse, Subject
 
 
 class CountryAdmin(admin.ModelAdmin):
@@ -110,6 +110,16 @@ class CourseAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_filter = ("available",)
 
+@admin.register(StudentCourse)
+class StudentCourseAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "student",
+        "course",
+        "transaction",
+    )
+    search_fields = ("student", "course")
+    list_filter = ("student", "course", "transaction")
 
 admin.site.register(Country, CountryAdmin)
 admin.site.register(EducationStage, EducationStageAdmin)
