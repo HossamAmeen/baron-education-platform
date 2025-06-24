@@ -65,7 +65,9 @@ class PaymobPaymentService:
                 "redirection_url": f"https://baronlearning.com/course-content/{course.id}",
             }
         )
-        print(payload)
+        print("###################################################################")
+        print(payload)       
+        print("###################################################################")
         headers = {
             "Authorization": f"Token {self.private_key}",
             "Content-Type": "application/json",

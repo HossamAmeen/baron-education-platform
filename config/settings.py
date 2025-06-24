@@ -14,6 +14,7 @@ environ.Env.read_env(".env")
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG", default=False)
+ENVIRONMENT = env("ENVIRONMENT", default="local")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1"])
 
@@ -77,7 +78,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-if DEBUG:
+if ENVIRONMENT == "local":
     MIDDLEWARE.append("query_inspector.middleware.QueryCountMiddleware")
 
 ROOT_URLCONF = "config.urls"
