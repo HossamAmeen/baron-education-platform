@@ -81,6 +81,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
 class RetrieveCourseSerializer(serializers.ModelSerializer):
     is_paid = serializers.SerializerMethodField()
+    is_authenticated = serializers.SerializerMethodField()
     lessons = serializers.SerializerMethodField()
 
     class Meta:
@@ -97,7 +98,12 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
             "image",
             "lessons",
             "is_paid",
+            "is_authenticated"
         ]
+
+    def get_is_is_authenticated():
+        user = self.context["request"].user
+        return True if user and user.is_authenticated else False
 
     def get_is_paid(self, obj):
         user = self.context["request"].user
