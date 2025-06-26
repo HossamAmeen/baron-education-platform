@@ -199,8 +199,7 @@ DEFAULT_CHARSET = 'utf-8'
 FILE_CHARSET = 'utf-8'
 
 
-import os
-from pathlib import Path
+
 
 # Create a dedicated payment log file
 PAYMENT_LOG_FILE = os.path.join(BASE_DIR, 'payments.log')

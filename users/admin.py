@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, make_password
 
-from users.models import Student, User
+from users.models import Admin, Student, User
 
 
 class UserForm(forms.ModelForm):
@@ -23,9 +23,18 @@ class UserForm(forms.ModelForm):
             "user_permissions",
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password_confirmation = cleaned_data.pop("password_confirmation")
+
+        if password and password != password_confirmation:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
+
     def save(self, commit=True):
         user = super().save(commit=False)
-        if self.cleaned_data["password"]:
+        if self.cleaned_data.get("password"):
             user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
@@ -47,11 +56,50 @@ class StudentAdmin(admin.ModelAdmin):
     form = UserForm
 
 
+class AdminForm(forms.ModelForm):
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput,
+        required=False,
+        help_text="Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href=\"../password/\">this form</a>."
+    )
+    password_confirmation = forms.CharField(
+        label="Password confirmation",
+        widget=forms.PasswordInput,
+        required=False,
+        help_text="Enter the same password as above, for verification."
+    )
+
+    class Meta:
+        model = User
+        exclude = (
+            "last_login",
+            "groups",
+            "user_permissions",
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password_confirmation = cleaned_data.pop("password_confirmation")
+
+        if password:
+            if password != password_confirmation:
+                raise forms.ValidationError("Passwords do not match.")
+            cleaned_data["password"] = make_password(password)
+        return cleaned_data
+
+
 class UserAdmin(admin.ModelAdmin):
     list_display = ("id", "first_name", "last_name", "phone", "email", "role")
     search_fields = ("phone", "email", "role")
     list_filter = ("phone", "email", "role")
+    form = AdminForm
+    fieldsets = (
+        (None, {'fields': ('first_name', 'last_name', 'phone', 'email', "gender", "role", "is_staff", "is_superuser", 'password', 'password_confirmation')}),)
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).exclude(role="student")
 
 admin.site.unregister(Group)
 admin.site.register(User, UserAdmin)
