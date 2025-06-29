@@ -35,6 +35,11 @@ class UserForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         if self.cleaned_data.get("password"):
+            if not self.cleaned_data.get("password_confirmation"):
+                raise forms.ValidationError("Password confirmation is required.")
+            if self.cleaned_data.get("password") != self.cleaned_data.get("password_confirmation"):
+                raise forms.ValidationError("Passwords do not match.")
+            self.cleaned_data.pop("password_confirmation")
             user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
