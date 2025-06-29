@@ -36,7 +36,6 @@ class ConfigurationAdmin(admin.ModelAdmin):
         "twitter",
         "linkedin",
         "googel",
-        "footer_description",
         "whatsapp_number",
     )
 
