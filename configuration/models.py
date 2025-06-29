@@ -6,7 +6,7 @@ from django_extensions.db.models import TimeStampedModel
 class Slider(TimeStampedModel):
     description = models.TextField(null=True)
     image = models.ImageField(upload_to="slider_images/")
-    ordering = models.IntegerField()
+    ordering = models.IntegerField(default=1)
     link = models.URLField(null=True)
 
 
@@ -14,7 +14,7 @@ class Review(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     rate = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    ordering = models.IntegerField()
+    ordering = models.IntegerField(default=1)
 
 
 class ContactUs(TimeStampedModel):
@@ -24,6 +24,9 @@ class ContactUs(TimeStampedModel):
     subject = models.CharField(max_length=100)
     description = models.TextField()
 
+    class Meta:
+        verbose_name = "Contact Us"
+        verbose_name_plural = "Contact Us"
 
 class Configuration(TimeStampedModel):
     eg_number = models.CharField(max_length=15)

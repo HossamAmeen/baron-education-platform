@@ -39,6 +39,15 @@ class ConfigurationAdmin(admin.ModelAdmin):
         "whatsapp_number",
     )
 
+    def has_add_permission(self, request):
+        return False
+    
+    # def has_change_permission(self, request, obj=None):
+    #     return False
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 admin.site.register(Slider, SliderAdmin)
 admin.site.register(ContactUs, ContactUsAdmin)
 admin.site.register(Review, ReviewAdmin)
