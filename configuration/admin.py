@@ -41,6 +41,7 @@ class ConfigurationAdmin(admin.ModelAdmin):
         "linkedin",
         "googel",
         "footer_description",
+        "whatsapp_number",
     )
     search_fields = ("email", "twitter", "linkedin", "googel", "meta")
     list_filter = ("email",)
