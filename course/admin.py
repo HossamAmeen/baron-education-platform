@@ -12,7 +12,7 @@ class EducationStageAdmin(admin.ModelAdmin):
 class EducationGradeAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "education_stage", "get_country")
     search_fields = ("name",)
-    list_filter = ("education_stage", "education_stage__country")
+    list_filter = ("education_stage__country",)
 
     def get_country(self, obj):
         return obj.education_stage.country

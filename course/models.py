@@ -11,6 +11,7 @@ class Country(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "Countries"
+        verbose_name = "1. Country"
 
     def __str__(self):
         return self.name
