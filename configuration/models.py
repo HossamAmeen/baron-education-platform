@@ -42,3 +42,4 @@ class Configuration(TimeStampedModel):
     linkedin = models.URLField(null=True)
     googel = models.URLField(null=True)
     footer_description = models.TextField()
+    whatsapp_number = models.CharField(max_length=50, null=True)

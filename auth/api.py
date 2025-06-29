@@ -41,10 +41,26 @@ class LoginAPI(generics.CreateAPIView):
                 {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
             )
         tokens = RefreshToken.for_user(user)
+        user_data = {
+            "id": user.id,
+            "full_name": user.get_full_name(),
+        }
+        tokens = RefreshToken.for_user(user)
+        tokens["user"] = user_data
+
         return Response(
             {
                 "access": str(tokens.access_token),
                 "refresh": str(tokens),
+                "user": {
+                    "id": user.id,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "phone": user.phone,
+                    "email": user.email,
+                    "gender": user.gender,
+                    "role": user.role,
+                },
             },
             status=status.HTTP_200_OK,
         )
