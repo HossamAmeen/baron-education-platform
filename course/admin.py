@@ -35,24 +35,17 @@ class SemesterAdmin(admin.ModelAdmin):
     list_filter = (
         "education_grade__education_stage__country",
         "education_grade",
-        "education_grade__education_stage",
     )
 
     def get_education_stage(self, obj):
         return obj.education_grade.education_stage
 
     get_education_stage.short_description = "Education Stage"
-    get_education_stage.admin_order_field = (
-        "education_grade__education_stage"  # Allows sorting by education stage
-    )
 
     def get_country(self, obj):
         return obj.education_grade.education_stage.country
 
     get_country.short_description = "Country"
-    get_country.admin_order_field = (
-        "education_grade__education_stage__country"  # Allows sorting by country
-    )
 
 
 class SubjectAdmin(admin.ModelAdmin):
