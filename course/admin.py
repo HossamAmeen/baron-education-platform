@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 from .models import Country, Course, EducationGrade, EducationStage, Lesson, Semester, StudentCourse, Subject
+from django.utils.html import format_html
+from django.urls import reverse
 
 
 class EducationStageAdmin(admin.ModelAdmin):
@@ -101,12 +103,41 @@ class CourseAdmin(admin.ModelAdmin):
 class StudentCourseAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "student",
-        "course",
-        "transaction",
+        "student_link",
+        "course_link",
+        "transaction_link",
     )
     search_fields = ("student", "course")
     list_filter = ("student", "course", "transaction")
+    page_size = 10
+    list_per_page = 10
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("student", "course", "transaction")
+
+    def student_link(self, obj):
+        return format_html('<a href="{}">{}</a>'.format(
+            reverse('admin:users_student_change', args=(obj.student.pk,)),
+            obj.student
+        ))
+
+    student_link.short_description = 'Student'
+
+    def course_link(self, obj):
+        return format_html('<a href="{}">{}</a>'.format(
+            reverse('admin:course_course_change', args=(obj.course.pk,)),
+            obj.course
+        ))
+
+    course_link.short_description = 'Course'
+
+    def transaction_link(self, obj):
+        return format_html('<a href="{}">{}</a>'.format(
+            reverse('admin:payments_transaction_change', args=(obj.transaction.pk,)),
+            obj.transaction
+        ))
+
+    transaction_link.short_description = 'Transaction_info'
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):

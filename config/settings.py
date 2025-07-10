@@ -18,9 +18,9 @@ ENVIRONMENT = env("ENVIRONMENT", default="local")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1"])
 
-if os.getenv("ENVIRONMENT") != "local":
+if ENVIRONMENT != "local":
     sentry_sdk.init(
-        dsn="https://13743427697e9d926d3a1218c1653ebf@o4508088349032448.ingest.de.sentry.io/4508654916206672",
+        dsn="https://88a6d4a754e65d62e147b8b8cdfd1891@o4509627879194624.ingest.us.sentry.io/4509627880964096",
         integrations=[DjangoIntegration()],
         traces_sample_rate=1.0,
         send_default_pii=True,

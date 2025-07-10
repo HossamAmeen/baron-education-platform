@@ -57,3 +57,6 @@ class Student(User):
         self.role = "student"
         self.is_staff = False
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.full_name}({self.phone})"

@@ -10,8 +10,8 @@ class Country(TimeStampedModel):
     code = models.CharField(max_length=10)
 
     class Meta:
-        verbose_name_plural = "Countries"
-        verbose_name = "1. Country"
+        verbose_name = "Country"
+        verbose_name_plural = "1. Countries"
 
     def __str__(self):
         return self.name
@@ -23,7 +23,8 @@ class EducationStage(TimeStampedModel):
     countries = models.ManyToManyField(Country, related_name="education_stages")
 
     class Meta:
-        verbose_name_plural = "Education Stages"
+        verbose_name = "Education Stage"
+        verbose_name_plural = "2. Education Stages"
 
     def __str__(self):
         return self.name
@@ -34,7 +35,8 @@ class EducationGrade(TimeStampedModel):
     education_stage = models.ForeignKey(EducationStage, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name_plural = "Education Grades"
+        verbose_name = "Education Grade"
+        verbose_name_plural = "3. Education Grades"
 
     def __str__(self):
         return self.name
@@ -45,7 +47,8 @@ class Semester(TimeStampedModel):
     education_grade = models.ForeignKey(EducationGrade, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name_plural = "Semesters"
+        verbose_name = "Semester"
+        verbose_name_plural = "4. Semesters"
 
     def __str__(self):
         return self.name + "-" + self.education_grade.name + "-" + self.education_grade.education_stage.name + "-" + self.education_grade.education_stage.country.name
@@ -64,7 +67,8 @@ class Subject(TimeStampedModel):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name_plural = "Subjects"
+        verbose_name = "Subject"
+        verbose_name_plural = "5. Subjects"
 
     def __str__(self):
         return self.name
@@ -90,7 +94,8 @@ class Course(TimeStampedModel):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name_plural = "Courses"
+        verbose_name = "Course"
+        verbose_name_plural = "6. Courses"
 
     def __str__(self):
         return self.name
@@ -106,7 +111,8 @@ class Lesson(TimeStampedModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name_plural = "Lessons"
+        verbose_name = "Lesson"
+        verbose_name_plural = "7. Lessons"
 
     def __str__(self):
         return self.title
@@ -122,3 +128,7 @@ class StudentCourse(TimeStampedModel):
     transaction = models.ForeignKey(
         Transaction, on_delete=models.CASCADE, related_name="student_courses"
     )
+
+    class Meta:
+        verbose_name = "Student Course"
+        verbose_name_plural = "8. Student Courses"
