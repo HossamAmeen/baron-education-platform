@@ -39,6 +39,12 @@ class CoursePaymentView(APIView):
         },
     )
     def post(self, request, course_id):
+        if not request.user.is_student:
+            return Response(
+                {"message": "You are not allowed to make a payment"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         course = Course.objects.filter(id=course_id).first()
         if not course:
             return Response(
@@ -64,19 +70,12 @@ class CoursePaymentView(APIView):
             )
 
         else:
-            try:
-                transaction = Transaction.objects.create(
-                    status="pending", user=request.user, amount=course.price
-                )
-                StudentCourse.objects.create(
-                    student_id=request.user.id, course=course, transaction=transaction
-                )
-            except Exception as e:
-                logger.error("Error creating transaction: %s", e)
-                return Response(
-                    {"message": "Error creating transaction " + str(e)},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+            transaction = Transaction.objects.create(
+                status="pending", user=request.user, amount=course.price
+            )
+            StudentCourse.objects.create(
+                student_id=request.user.id, course=course, transaction=transaction
+            )
         # Generate Paymob payment link
         payment_service = PaymobPaymentService()
         try:
@@ -90,7 +89,7 @@ class CoursePaymentView(APIView):
         except Exception as e:
             logger.error("Error creating Paymob intention: %s", e)
             return Response(
-                {"message": "Error creating Paymob intention " + str(e)},
+                {"message": "Error creating Paymob intention"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
