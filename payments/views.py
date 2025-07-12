@@ -9,11 +9,13 @@ from course.models import StudentCourse
 from django.db import transaction
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 import logging
+
+from shared.permisions import IsStudent
 logger = logging.getLogger("payments")
 
 
 class CoursePaymentView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudent]
 
     @transaction.atomic
     @extend_schema(
@@ -39,12 +41,6 @@ class CoursePaymentView(APIView):
         },
     )
     def post(self, request, course_id):
-        if not request.user.is_student:
-            return Response(
-                {"message": "You are not allowed to make a payment"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
         course = Course.objects.filter(id=course_id).first()
         if not course:
             return Response(

@@ -13,6 +13,7 @@ from auth.serializers import (
     StudentRegisterSerializer,
     updatedStudentProfileSerializer,
 )
+from shared.permisions import IsStudent
 from users.models import User
 
 
@@ -124,7 +125,7 @@ class ResetPassword(generics.GenericAPIView):
 
 class StudentProfileView(generics.GenericAPIView):
     serializer_class = updatedStudentProfileSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudent]
 
     def get(self, request):
         serializer = self.serializer_class(request.user.student)
