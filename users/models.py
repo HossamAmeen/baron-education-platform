@@ -30,10 +30,6 @@ class User(AbstractUser):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
-    @property
-    def is_student(self):
-        return self.role == "student"
-
     def __str__(self):
         return self.email
 

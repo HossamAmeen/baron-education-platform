@@ -30,7 +30,7 @@ class LoginAPI(generics.CreateAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-
+        roles = serializer.validated_data.get("roles", ["student"])
         user = User.objects.filter(
             Q(email=serializer.validated_data["username"])
             | Q(phone=serializer.validated_data["username"])
@@ -40,6 +40,10 @@ class LoginAPI(generics.CreateAPIView):
         ):  # noqa
             return Response(
                 {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+        if user.role not in roles:
+            return Response(
+                {"error": "Invalid role"}, status=status.HTTP_401_UNAUTHORIZED
             )
         tokens = RefreshToken.for_user(user)
         user_data = {
