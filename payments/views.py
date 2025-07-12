@@ -72,13 +72,20 @@ class CoursePaymentView(APIView):
             )
         # Generate Paymob payment link
         payment_service = PaymobPaymentService()
-        status_code, iframe_url = payment_service.create_paymob_intention(
-            amount=course.price,
-            customer=request.user,
-            course=course,
-            reference_id=transaction.id,
-            transaction=transaction,
-        )
+        try:
+            status_code, iframe_url = payment_service.create_paymob_intention(
+                amount=course.price,
+                customer=request.user,
+                course=course,
+                reference_id=transaction.id,
+                transaction=transaction,
+            )
+        except Exception as e:
+            logger.error("Error creating Paymob intention: %s", e)
+            return Response(
+                {"message": "Error creating Paymob intention " + str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         return Response({"data": {"iframe_url": iframe_url}}, status=status_code)
 
