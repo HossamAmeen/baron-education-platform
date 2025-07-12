@@ -46,7 +46,7 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
-    roles = serializers.ListField(child=serializers.CharField())
+    roles = serializers.ListField(child=serializers.CharField(), required=False)
 
 
 class ResetPasswordRequestSerializer(serializers.Serializer):
