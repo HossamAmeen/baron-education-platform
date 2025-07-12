@@ -64,12 +64,19 @@ class CoursePaymentView(APIView):
             )
 
         else:
-            transaction = Transaction.objects.create(
-                status="pending", user=request.user, amount=course.price
-            )
-            StudentCourse.objects.create(
-                student_id=request.user.id, course=course, transaction=transaction
-            )
+            try:
+                transaction = Transaction.objects.create(
+                    status="pending", user=request.user, amount=course.price
+                )
+                StudentCourse.objects.create(
+                    student_id=request.user.id, course=course, transaction=transaction
+                )
+            except Exception as e:
+                logger.error("Error creating transaction: %s", e)
+                return Response(
+                    {"message": "Error creating transaction " + str(e)},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         # Generate Paymob payment link
         payment_service = PaymobPaymentService()
         try:
