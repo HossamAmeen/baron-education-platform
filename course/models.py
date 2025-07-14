@@ -94,7 +94,7 @@ class Course(TimeStampedModel):
     available = models.BooleanField(default=True)
     start_date = models.DateField()
     hours_count = models.IntegerField()
-    duration = models.IntegerField()
+    duration = models.IntegerField(help_text="in days")
     price = models.IntegerField()
     currency = models.CharField(
         max_length=3, choices=CurrencyCHOICES.choices, default=CurrencyCHOICES.EGP

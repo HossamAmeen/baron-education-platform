@@ -171,9 +171,11 @@ class StudentCourseAdmin(admin.ModelAdmin):
         "student_link",
         "course_link",
         "transaction_link",
+        "transaction__status",
+        "transaction__modified",
     )
     search_fields = ("student", "course")
-    list_filter = ("student", "course", "transaction")
+    list_filter = ("student", "course", "transaction__status")
     page_size = 10
     list_per_page = 10
 
