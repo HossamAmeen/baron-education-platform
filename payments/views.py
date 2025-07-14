@@ -1,16 +1,17 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from payments.models import Transaction
-from rest_framework import status
-from course.models import Course
-from rest_framework.permissions import IsAuthenticated
-from payments.services.paymob_payment_service import PaymobPaymentService
-from course.models import StudentCourse
-from django.db import transaction
-from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 import logging
 
+from django.db import transaction
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from course.models import Course, StudentCourse
+from payments.models import Transaction
+from payments.services.paymob_payment_service import PaymobPaymentService
 from shared.permisions import IsStudent
+
 logger = logging.getLogger("payments")
 
 
@@ -22,18 +23,12 @@ class CoursePaymentView(APIView):
         responses={
             200: OpenApiResponse(
                 description="Payment successful",
-                response={
-                    "data": {
-                        "iframe_url": "https://example.com/iframe_url"
-                    }
-                },
+                response={"data": {"iframe_url": "https://example.com/iframe_url"}},
                 examples=[
                     OpenApiExample(
                         "Payment successful",
                         value={
-                            "data": {
-                                "iframe_url": "https://example.com/iframe_url"
-                            }
+                            "data": {"iframe_url": "https://example.com/iframe_url"}
                         },
                     )
                 ],

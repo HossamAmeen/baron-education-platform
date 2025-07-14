@@ -194,39 +194,37 @@ PAYMOB_CALLBACK_URL = env("PAYMOB_CALLBACK_URL")
 PAYMOB_PUBLIC_KEY = env("PAYMOB_PUBLIC_KEY")
 PAYMOB_PRIVATE_KEY = env("PAYMOB_PRIVATE_KEY")
 
-DEFAULT_CHARSET = 'utf-8'
+DEFAULT_CHARSET = "utf-8"
 
-FILE_CHARSET = 'utf-8'
-
-
+FILE_CHARSET = "utf-8"
 
 
 # Create a dedicated payment log file
-PAYMENT_LOG_FILE = os.path.join(BASE_DIR, 'payments.log')
+PAYMENT_LOG_FILE = os.path.join(BASE_DIR, "payments.log")
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'detailed': {
-            'format': '{asctime} {levelname} {module} {message}',
-            'style': '{',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "detailed": {
+            "format": "{asctime} {levelname} {module} {message}",
+            "style": "{",
         },
     },
-    'handlers': {
-        'payment_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': PAYMENT_LOG_FILE,
-            'encoding': 'utf-8',
-            'formatter': 'detailed',
+    "handlers": {
+        "payment_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": PAYMENT_LOG_FILE,
+            "encoding": "utf-8",
+            "formatter": "detailed",
         },
     },
-    'loggers': {
-        'payments': {  # Custom logger name
-            'handlers': ['payment_file'],
-            'level': 'DEBUG',
-            'propagate': False,  # Prevent duplicate logs
+    "loggers": {
+        "payments": {  # Custom logger name
+            "handlers": ["payment_file"],
+            "level": "DEBUG",
+            "propagate": False,  # Prevent duplicate logs
         },
     },
 }

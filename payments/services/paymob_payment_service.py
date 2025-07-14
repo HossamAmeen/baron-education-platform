@@ -1,5 +1,7 @@
-import requests
 import json
+
+import requests
+
 from config import settings
 
 
@@ -15,7 +17,6 @@ class PaymobPaymentService:
         self.private_key = settings.PAYMOB_PRIVATE_KEY
         self.payment_methods = [9395]
         self.currency = currency
-
 
     def get_iframe_url(self, client_secret):
         return self.PAYMOB_IFRAME_URL.format(self.public_key, client_secret)
@@ -66,7 +67,7 @@ class PaymobPaymentService:
             }
         )
         print("###################################################################")
-        print(payload)       
+        print(payload)
         print("###################################################################")
         headers = {
             "Authorization": f"Token {self.private_key}",

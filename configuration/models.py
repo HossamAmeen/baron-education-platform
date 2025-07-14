@@ -28,6 +28,7 @@ class ContactUs(TimeStampedModel):
         verbose_name = "Contact Us"
         verbose_name_plural = "Contact Us"
 
+
 class Configuration(TimeStampedModel):
     eg_number = models.CharField(max_length=15)
     ksa_number = models.CharField(max_length=15)

@@ -48,6 +48,7 @@ class UserForm(forms.ModelForm):
             user.save()
         return user
 
+
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = ("id", "first_name", "last_name", "phone", "parent_phone")
@@ -63,7 +64,22 @@ class StudentAdmin(admin.ModelAdmin):
     )
     form = UserForm
     fieldsets = (
-        (None, {'fields': ('first_name', 'last_name', 'phone', "parent_phone", 'email', "gender", 'password', 'password_confirmation')}),)
+        (
+            None,
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "phone",
+                    "parent_phone",
+                    "email",
+                    "gender",
+                    "password",
+                    "password_confirmation",
+                )
+            },
+        ),
+    )
 
 
 class AdminForm(forms.ModelForm):
@@ -71,13 +87,13 @@ class AdminForm(forms.ModelForm):
         label="Password",
         widget=forms.PasswordInput,
         required=False,
-        help_text="Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href=\"../password/\">this form</a>."
+        help_text='Raw passwords are not stored, so there is no way to see this user\'s password, but you can change the password using <a href="../password/">this form</a>.',
     )
     password_confirmation = forms.CharField(
         label="Password confirmation",
         widget=forms.PasswordInput,
         required=False,
-        help_text="Enter the same password as above, for verification."
+        help_text="Enter the same password as above, for verification.",
     )
 
     class Meta:
@@ -99,6 +115,7 @@ class AdminForm(forms.ModelForm):
             cleaned_data["password"] = make_password(password)
         return cleaned_data
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ("id", "first_name", "last_name", "phone", "email", "role")
@@ -106,9 +123,27 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ("phone", "email", "role")
     form = AdminForm
     fieldsets = (
-        (None, {'fields': ('first_name', 'last_name', 'phone', 'email', "gender", "role", "is_staff", "is_superuser", 'password', 'password_confirmation')}),)
+        (
+            None,
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "phone",
+                    "email",
+                    "gender",
+                    "role",
+                    "is_staff",
+                    "is_superuser",
+                    "password",
+                    "password_confirmation",
+                )
+            },
+        ),
+    )
 
     def get_queryset(self, request):
         return super().get_queryset(request).exclude(role="student")
+
 
 admin.site.unregister(Group)

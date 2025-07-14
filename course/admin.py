@@ -1,8 +1,17 @@
 from django.contrib import admin
-
-from .models import Country, Course, EducationGrade, EducationStage, Lesson, Semester, StudentCourse, Subject
-from django.utils.html import format_html
 from django.urls import reverse
+from django.utils.html import format_html
+
+from .models import (
+    Country,
+    Course,
+    EducationGrade,
+    EducationStage,
+    Lesson,
+    Semester,
+    StudentCourse,
+    Subject,
+)
 
 
 class EducationStageAdmin(admin.ModelAdmin):
@@ -99,6 +108,7 @@ class CourseAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_filter = ("available",)
 
+
 @admin.register(StudentCourse)
 class StudentCourseAdmin(admin.ModelAdmin):
     list_display = (
@@ -113,37 +123,50 @@ class StudentCourseAdmin(admin.ModelAdmin):
     list_per_page = 10
 
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related("student", "course", "transaction")
+        return (
+            super()
+            .get_queryset(request)
+            .select_related("student", "course", "transaction")
+        )
 
     def student_link(self, obj):
-        return format_html('<a href="{}">{}</a>'.format(
-            reverse('admin:users_student_change', args=(obj.student.pk,)),
-            obj.student
-        ))
+        return format_html(
+            '<a href="{}">{}</a>'.format(
+                reverse("admin:users_student_change", args=(obj.student.pk,)),
+                obj.student,
+            )
+        )
 
-    student_link.short_description = 'Student'
+    student_link.short_description = "Student"
 
     def course_link(self, obj):
-        return format_html('<a href="{}">{}</a>'.format(
-            reverse('admin:course_course_change', args=(obj.course.pk,)),
-            obj.course
-        ))
+        return format_html(
+            '<a href="{}">{}</a>'.format(
+                reverse("admin:course_course_change", args=(obj.course.pk,)), obj.course
+            )
+        )
 
-    course_link.short_description = 'Course'
+    course_link.short_description = "Course"
 
     def transaction_link(self, obj):
-        return format_html('<a href="{}">{}</a>'.format(
-            reverse('admin:payments_transaction_change', args=(obj.transaction.pk,)),
-            obj.transaction
-        ))
+        return format_html(
+            '<a href="{}">{}</a>'.format(
+                reverse(
+                    "admin:payments_transaction_change", args=(obj.transaction.pk,)
+                ),
+                obj.transaction,
+            )
+        )
 
-    transaction_link.short_description = 'Transaction_info'
+    transaction_link.short_description = "Transaction_info"
+
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "code")
     search_fields = ("name",)
     list_filter = ("code",)
+
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
@@ -162,6 +185,7 @@ class LessonAdmin(admin.ModelAdmin):
     list_filter = ("course", "course__subject")
     page_size = 100
     list_per_page = 100
+
     def get_queryset(self, request):
         return super().get_queryset(request).select_related("course", "course__subject")
 
@@ -169,6 +193,7 @@ class LessonAdmin(admin.ModelAdmin):
         return obj.course.subject.name
 
     course__subject.short_description = "Subject"
+
 
 admin.site.register(EducationStage, EducationStageAdmin)
 admin.site.register(EducationGrade, EducationGradeAdmin)

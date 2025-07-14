@@ -19,7 +19,9 @@ class Country(TimeStampedModel):
 
 class EducationStage(TimeStampedModel):
     name = models.CharField(max_length=100)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="education_stages_country")
+    country = models.ForeignKey(
+        Country, on_delete=models.CASCADE, related_name="education_stages_country"
+    )
     countries = models.ManyToManyField(Country, related_name="education_stages")
 
     class Meta:
@@ -51,7 +53,15 @@ class Semester(TimeStampedModel):
         verbose_name_plural = "4. Semesters"
 
     def __str__(self):
-        return self.name + "-" + self.education_grade.name + "-" + self.education_grade.education_stage.name + "-" + self.education_grade.education_stage.country.name
+        return (
+            self.name
+            + "-"
+            + self.education_grade.name
+            + "-"
+            + self.education_grade.education_stage.name
+            + "-"
+            + self.education_grade.education_stage.country.name
+        )
 
 
 class Group(TimeStampedModel):

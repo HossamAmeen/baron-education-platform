@@ -39,11 +39,11 @@ class LoginAPI(generics.CreateAPIView):
             serializer.validated_data["password"]
         ):  # noqa
             return Response(
-                {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+                {"details": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
             )
         if user.role not in roles:
             return Response(
-                {"error": "Invalid role"}, status=status.HTTP_401_UNAUTHORIZED
+                {"details": "Invalid role"}, status=status.HTTP_401_UNAUTHORIZED
             )
         tokens = RefreshToken.for_user(user)
         user_data = {

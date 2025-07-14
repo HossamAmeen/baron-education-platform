@@ -98,7 +98,7 @@ class RetrieveCourseSerializer(serializers.ModelSerializer):
             "image",
             "lessons",
             "is_paid",
-            "is_authenticated"
+            "is_authenticated",
         ]
 
     def get_is_authenticated(self, obj):
