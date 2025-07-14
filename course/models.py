@@ -101,7 +101,7 @@ class Course(TimeStampedModel):
     )
     image = models.ImageField(upload_to="media/")
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Course"

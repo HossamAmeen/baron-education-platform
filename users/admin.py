@@ -52,7 +52,7 @@ class UserForm(forms.ModelForm):
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = ("id", "first_name", "last_name", "phone", "parent_phone")
-    search_fields = ("phone", "parent_phone")
+    search_fields = ("first_name", "last_name", "phone", "parent_phone")
     list_filter = ("phone", "parent_phone")
     exclude = (
         "is_superuser",

@@ -14,6 +14,13 @@ from .models import (
 )
 
 
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "code")
+    search_fields = ("name",)
+    list_filter = ("code",)
+
+
 class EducationStageAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "country")
     search_fields = ("name",)
@@ -33,6 +40,17 @@ class EducationGradeAdmin(admin.ModelAdmin):
         "education_stage__country"  # Allows sorting by country
     )
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "education_stage":
+            kwargs["queryset"] = EducationStage.objects.order_by('name').select_related("country")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def render_change_form(self, request, context, *args, **kwargs):
+        if 'education_stage' in context['adminform'].form.fields:
+            education_stage_field = context['adminform'].form.fields['education_stage']
+            education_stage_field.label_from_instance = lambda obj: f"{obj.country.name} - {obj.name}"
+        return super().render_change_form(request, context, *args, **kwargs)
+    
 
 class SemesterAdmin(admin.ModelAdmin):
     list_display = (
@@ -58,6 +76,16 @@ class SemesterAdmin(admin.ModelAdmin):
 
     get_country.short_description = "Country"
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "education_grade":
+            kwargs["queryset"] = EducationGrade.objects.order_by('name').select_related("education_stage__country")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def render_change_form(self, request, context, *args, **kwargs):
+        if 'education_grade' in context['adminform'].form.fields:
+            education_grade_field = context['adminform'].form.fields['education_grade']
+            education_grade_field.label_from_instance = lambda obj: f"{obj.education_stage.country.name} - {obj.education_stage.name} - {obj.name}"
+        return super().render_change_form(request, context, *args, **kwargs)
 
 class SubjectAdmin(admin.ModelAdmin):
     list_display = (
@@ -94,7 +122,18 @@ class SubjectAdmin(admin.ModelAdmin):
     get_country.short_description = "Country"
     get_country.admin_order_field = "semester__education_grade__education_stage__country"  # Allows sorting by country
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "semester":
+            kwargs["queryset"] = Semester.objects.order_by('name').select_related("education_grade__education_stage__country")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def render_change_form(self, request, context, *args, **kwargs):
+        if 'semester' in context['adminform'].form.fields:
+            semester_field = context['adminform'].form.fields['semester']
+            semester_field.label_from_instance = lambda obj: f"{obj.education_grade.education_stage.country.name} - {obj.education_grade.education_stage.name} - {obj.education_grade.name} - {obj.name}"
+        return super().render_change_form(request, context, *args, **kwargs)
 
+@admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = (
         "id",
@@ -104,10 +143,26 @@ class CourseAdmin(admin.ModelAdmin):
         "start_date",
         "hours_count",
         "duration",
+        "subject"
     )
     search_fields = ("name",)
-    list_filter = ("available",)
+    list_filter = ("available", "subject")
+    page_size = 10
+    list_per_page = 10
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("subject")
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "subject":
+            kwargs["queryset"] = Subject.objects.order_by('name').select_related("semester__education_grade__education_stage__country")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def render_change_form(self, request, context, *args, **kwargs):
+        if 'subject' in context['adminform'].form.fields:
+            subject_field = context['adminform'].form.fields['subject']
+            subject_field.label_from_instance = lambda obj: f"{obj.semester.education_grade.education_stage.country.name} - {obj.semester.education_grade.education_stage.name} - {obj.semester.education_grade.name} - {obj.semester.name} - {obj.name}"
+        return super().render_change_form(request, context, *args, **kwargs)
 
 @admin.register(StudentCourse)
 class StudentCourseAdmin(admin.ModelAdmin):
@@ -161,13 +216,6 @@ class StudentCourseAdmin(admin.ModelAdmin):
     transaction_link.short_description = "Transaction_info"
 
 
-@admin.register(Country)
-class CountryAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "code")
-    search_fields = ("name",)
-    list_filter = ("code",)
-
-
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
     list_display = (
@@ -194,9 +242,18 @@ class LessonAdmin(admin.ModelAdmin):
 
     course__subject.short_description = "Subject"
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "course":
+            kwargs["queryset"] = Course.objects.order_by('name').select_related("subject__semester__education_grade__education_stage__country")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def render_change_form(self, request, context, *args, **kwargs):
+        if 'course' in context['adminform'].form.fields:
+            course_field = context['adminform'].form.fields['course']
+            course_field.label_from_instance = lambda obj: f"{obj.subject.semester.education_grade.education_stage.country.name} - {obj.subject.semester.education_grade.education_stage.name} - {obj.subject.semester.education_grade.name} - {obj.subject.semester.name} - {obj.subject.name} - {obj.name}"
+        return super().render_change_form(request, context, *args, **kwargs)
 
 admin.site.register(EducationStage, EducationStageAdmin)
 admin.site.register(EducationGrade, EducationGradeAdmin)
 admin.site.register(Semester, SemesterAdmin)
 admin.site.register(Subject, SubjectAdmin)
-admin.site.register(Course, CourseAdmin)
