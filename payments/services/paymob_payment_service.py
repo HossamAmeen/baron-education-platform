@@ -3,6 +3,8 @@ import json
 import requests
 
 from config import settings
+import logging
+logger = logging.getLogger("payments")
 
 
 class PaymobPaymentService:
@@ -77,8 +79,13 @@ class PaymobPaymentService:
             "POST", self.intention_url, headers=headers, data=payload
         )
         if response.status_code != 201:
+            logger.error("Paymob intention created failed error: {}". format(response.json()))
             return response.status_code, None
+
         client_secret = response.json().get("client_secret")
+        if not client_secret:
+            logger.error("client_secret is not found: {}". format(response.json()))
+            return response.status_code, None
         transaction.client_secret = client_secret
         transaction.save()
         return response.status_code, self.get_iframe_url(client_secret)

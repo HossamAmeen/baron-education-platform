@@ -83,7 +83,11 @@ class CoursePaymentView(APIView):
                 {"message": "Error creating Paymob intention"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
+        if status_code != 201:
+            return Response(
+                {"message": "Error creating Paymob intention"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response({"data": {"iframe_url": iframe_url}}, status=status_code)
 
 

@@ -37,7 +37,6 @@ class UserForm(forms.ModelForm):
                 raise forms.ValidationError("Password confirmation is required.")
             if password != password_confirmation:
                 raise forms.ValidationError("Passwords do not match.")
-            cleaned_data["password"] = make_password(password)
         return cleaned_data
 
     def save(self, commit=True):
