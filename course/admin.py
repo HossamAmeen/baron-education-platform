@@ -13,6 +13,8 @@ from .models import (
     Subject,
 )
 
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django import forms
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
@@ -20,26 +22,38 @@ class CountryAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_filter = ("code",)
 
-
+@admin.register(EducationStage)
 class EducationStageAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "country")
     search_fields = ("name",)
     list_filter = ("country",)
 
 
+class EducationGradeForm(forms.ModelForm):
+    class Meta:
+        model = EducationGrade
+        fields = '__all__'
+        widgets = {
+            'education_stage': FilteredSelectMultiple(
+                "Education Stage", is_stacked=False
+            ),
+        }
+
+@admin.register(EducationGrade)
 class EducationGradeAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "education_stage", "get_country")
     search_fields = ("name",)
-    list_filter = ("education_stage__country",)
-
+    list_filter = ("education_stage__country", "education_stage")
+    form = EducationGradeForm
+    
     def get_country(self, obj):
         return obj.education_stage.country
-
+    
     get_country.short_description = "Country"
-    get_country.admin_order_field = (
-        "education_stage__country"  # Allows sorting by country
-    )
-
+    get_country.admin_order_field = "education_stage__country"
+    
+    class Media:
+        js = ('admin/js/education_grade_filter.js',)
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "education_stage":
             kwargs["queryset"] = EducationStage.objects.order_by('name').select_related("country")
@@ -51,7 +65,7 @@ class EducationGradeAdmin(admin.ModelAdmin):
             education_stage_field.label_from_instance = lambda obj: f"{obj.country.name} - {obj.name}"
         return super().render_change_form(request, context, *args, **kwargs)
     
-
+@admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
     list_display = (
         "id",
@@ -63,6 +77,7 @@ class SemesterAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_filter = (
         "education_grade__education_stage__country",
+        "education_grade__education_stage",
         "education_grade",
     )
 
@@ -87,6 +102,7 @@ class SemesterAdmin(admin.ModelAdmin):
             education_grade_field.label_from_instance = lambda obj: f"{obj.education_stage.country.name} - {obj.education_stage.name} - {obj.name}"
         return super().render_change_form(request, context, *args, **kwargs)
 
+@admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
     list_display = (
         "id",
@@ -100,7 +116,7 @@ class SubjectAdmin(admin.ModelAdmin):
         "get_country",
     )
     search_fields = ("name",)
-    list_filter = ("available",)
+    list_filter = ("available", "semester__education_grade__education_stage__country", "semester__education_grade__education_stage", "semester__education_grade", "semester")
 
     def get_education_grade(self, obj):
         return obj.semester.education_grade
@@ -254,8 +270,3 @@ class LessonAdmin(admin.ModelAdmin):
             course_field = context['adminform'].form.fields['course']
             course_field.label_from_instance = lambda obj: f"{obj.subject.semester.education_grade.education_stage.country.name} - {obj.subject.semester.education_grade.education_stage.name} - {obj.subject.semester.education_grade.name} - {obj.subject.semester.name} - {obj.subject.name} - {obj.name}"
         return super().render_change_form(request, context, *args, **kwargs)
-
-admin.site.register(EducationStage, EducationStageAdmin)
-admin.site.register(EducationGrade, EducationGradeAdmin)
-admin.site.register(Semester, SemesterAdmin)
-admin.site.register(Subject, SubjectAdmin)

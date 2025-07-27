@@ -22,7 +22,6 @@ class EducationStage(TimeStampedModel):
     country = models.ForeignKey(
         Country, on_delete=models.CASCADE, related_name="education_stages_country"
     )
-    countries = models.ManyToManyField(Country, related_name="education_stages")
 
     class Meta:
         verbose_name = "Education Stage"
