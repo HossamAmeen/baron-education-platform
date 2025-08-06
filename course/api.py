@@ -30,7 +30,6 @@ from course.serializers import (
     SubjectSerializer,
 )
 from payments.models import Transaction
-from payments.services.paymob_payment_service import PaymobPaymentService
 
 
 class CountryListAPIView(ListAPIView):
@@ -41,7 +40,7 @@ class CountryListAPIView(ListAPIView):
 
 
 class EducationStageViewSet(ModelViewSet):
-    schema = None
+    http_method_names = ["get"]
     queryset = EducationStage.objects.prefetch_related(
         "educationgrade_set__semester_set"
     ).order_by("-id")
@@ -49,13 +48,13 @@ class EducationStageViewSet(ModelViewSet):
 
 
 class SemesterViewSet(ModelViewSet):
-    schema = None
+    http_method_names = ["get"]
     queryset = Semester.objects.order_by("-id")
     serializer_class = SemesterSerializer
 
 
 class GroupViewSet(ModelViewSet):
-    schema = None
+    http_method_names = ["get"]
     queryset = Group.objects.order_by("-id")
     serializer_class = GroupSerializer
 
@@ -73,12 +72,12 @@ class CourseViweSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user and self.request.user.is_authenticated:
-            self.queryset.filter(student_courses__student=self.request.user)
+            self.queryset.filter(student_courses__student=self.request.user, student_courses__transaction__status=Transaction.TransactionStatus.PAID)
         return self.queryset
 
 
 class LessonViewSet(ModelViewSet):
-    schema = None
+    http_method_names = ["get"]
     queryset = Lesson.objects.order_by("-id")
     serializer_class = LessonSerializer
 
