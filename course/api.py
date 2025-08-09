@@ -72,7 +72,7 @@ class CourseViweSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user and self.request.user.is_authenticated:
-            self.queryset.filter(student_courses__student=self.request.user, student_courses__transaction__status=Transaction.TransactionStatus.PAID)
+            self.queryset = self.queryset.filter(student_courses__student=self.request.user, student_courses__transaction__status=Transaction.TransactionStatus.PAID)
         return self.queryset
 
 
@@ -91,6 +91,17 @@ class SubjectViewSet(ModelViewSet):
             to_attr="available_courses",
         )
     ).order_by("-id")
+
+    def get_queryset(self):
+        if self.request.query_params.get("is_tahsili"):
+            self.queryset = self.queryset.filter(is_tahsili=True)
+        else:
+            self.queryset = self.queryset.filter(is_tahsili=False)
+        if self.request.query_params.get("is_kamiy"):
+            self.queryset = self.queryset.filter(is_kamiy=True)
+        else:
+            self.queryset = self.queryset.filter(is_kamiy=False)
+        return self.queryset
 
     serializer_class = SubjectSerializer
     filter_backends = [DjangoFilterBackend]

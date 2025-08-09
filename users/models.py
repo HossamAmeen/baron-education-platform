@@ -19,8 +19,6 @@ class User(AbstractUser):
         max_length=6, choices=UserGender.choices, default=UserGender.MALE
     )
     role = models.CharField(max_length=50, default="admin")
-    is_staff = models.BooleanField(default=True)
-    is_superuser = models.BooleanField(default=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["phone"]

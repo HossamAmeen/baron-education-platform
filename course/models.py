@@ -99,6 +99,8 @@ class Course(TimeStampedModel):
         max_length=3, choices=CurrencyCHOICES.choices, default=CurrencyCHOICES.EGP
     )
     image = models.ImageField(upload_to="media/")
+    is_tahsili = models.BooleanField(default=False)
+    is_kamiy = models.BooleanField(default=False)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
 

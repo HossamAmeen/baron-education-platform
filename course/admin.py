@@ -33,18 +33,14 @@ class EducationGradeForm(forms.ModelForm):
     class Meta:
         model = EducationGrade
         fields = '__all__'
-        widgets = {
-            'education_stage': FilteredSelectMultiple(
-                "Education Stage", is_stacked=False
-            ),
-        }
+
 
 @admin.register(EducationGrade)
 class EducationGradeAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "education_stage", "get_country")
     search_fields = ("name",)
     list_filter = ("education_stage__country", "education_stage")
-    form = EducationGradeForm
+    # form = EducationGradeForm
     
     def get_country(self, obj):
         return obj.education_stage.country
