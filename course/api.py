@@ -72,7 +72,7 @@ class CourseViweSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user and self.request.user.is_authenticated:
-            self.queryset = self.queryset.filter(student_courses__student=self.request.user, student_courses__transaction__status=Transaction.TransactionStatus.PAID)
+            self.queryset = self.queryset.filter(student_courses__student=self.request.user)
         return self.queryset
 
 

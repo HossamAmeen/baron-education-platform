@@ -5,6 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from course.models import Course
 from course.serializers import StudentCourseSerializer
+from payments.models import Transaction
 from users.models import Admin, Manager, Student, Teacher
 from users.serializers import (
     AdminSerializer,
@@ -51,4 +52,4 @@ class StudentCourseListView(ListAPIView):
     serializer_class = StudentCourseSerializer
 
     def get_queryset(self):
-        return Course.objects.filter(student_courses__student=self.request.user)
+        return Course.objects.filter(student_courses__student=self.request.user, student_courses__transaction__status=Transaction.TransactionStatus.PAID)
