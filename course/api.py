@@ -70,11 +70,6 @@ class CourseViweSet(ModelViewSet):
             return RetrieveCourseSerializer
         return CourseSerializer
 
-    def get_queryset(self):
-        if self.request.user and self.request.user.is_authenticated:
-            self.queryset = self.queryset.filter(student_courses__student=self.request.user)
-        return self.queryset
-
 
 class LessonViewSet(ModelViewSet):
     http_method_names = ["get"]
