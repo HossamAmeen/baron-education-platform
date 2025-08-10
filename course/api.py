@@ -97,6 +97,7 @@ class SubjectViewSet(ModelViewSet):
             self.queryset = self.queryset.filter(is_tahsili=True)
         else:
             self.queryset = self.queryset.filter(is_tahsili=False)
+            
         if self.request.query_params.get("is_kamiy"):
             self.queryset = self.queryset.filter(is_kamiy=True)
         else:

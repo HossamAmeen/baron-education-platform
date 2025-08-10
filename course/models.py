@@ -74,6 +74,8 @@ class Subject(TimeStampedModel):
     available = models.BooleanField(default=True)
     image = models.ImageField(upload_to="media/")
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    is_tahsili = models.BooleanField(default=False)
+    is_kamiy = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Subject"
