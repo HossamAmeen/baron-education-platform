@@ -40,7 +40,7 @@ class PaymobPaymentService:
                     {
                         "name": course.name,
                         "amount": amount,
-                        "description": course.description,
+                        "description": course.description[:200],
                         "quantity": 1,
                     }
                 ],
