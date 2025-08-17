@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
+from payments.models import Transaction
+
 from .models import (
     Country,
     Course,
@@ -236,7 +238,9 @@ class StudentCourseAdmin(admin.ModelAdmin):
         return False
     
     def has_delete_permission(self, request, obj=None):
-        return False
+        if obj and obj.transaction.status == Transaction.TransactionStatus.PAID:
+            return False
+        return True
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
