@@ -18,13 +18,13 @@ from django import forms
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "code")
+    list_display = ("id", "name", "code", "created")
     search_fields = ("name",)
     list_filter = ("code",)
 
 @admin.register(EducationStage)
 class EducationStageAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "country")
+    list_display = ("id", "name", "country", "created")
     search_fields = ("name",)
     list_filter = ("country",)
 
@@ -37,7 +37,7 @@ class EducationGradeForm(forms.ModelForm):
 
 @admin.register(EducationGrade)
 class EducationGradeAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "education_stage", "get_country")
+    list_display = ("id", "name", "education_stage", "get_country", "created")
     search_fields = ("name",)
     list_filter = ("education_stage__country", "education_stage")
     # form = EducationGradeForm
@@ -69,6 +69,7 @@ class SemesterAdmin(admin.ModelAdmin):
         "education_grade",
         "get_education_stage",
         "get_country",
+        "created",
     )
     search_fields = ("name",)
     list_filter = (
@@ -110,6 +111,7 @@ class SubjectAdmin(admin.ModelAdmin):
         "get_education_grade",
         "get_education_stage",
         "get_country",
+        "created",
     )
     search_fields = ("name",)
     list_filter = ("available", "semester__education_grade__education_stage__country", "semester__education_grade__education_stage", "semester__education_grade", "semester")
@@ -155,7 +157,8 @@ class CourseAdmin(admin.ModelAdmin):
         "start_date",
         "hours_count",
         "duration",
-        "subject"
+        "subject",
+        "created",
     )
     search_fields = ("name",)
     list_filter = ("available", "subject")
@@ -229,6 +232,11 @@ class StudentCourseAdmin(admin.ModelAdmin):
 
     transaction_link.short_description = "Transaction_info"
 
+    def has_add_permission(self, request):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
@@ -243,6 +251,7 @@ class LessonAdmin(admin.ModelAdmin):
         "course",
         "course__subject",
         "video_room_button",
+        "created",
     )
     search_fields = ("title",)
     list_filter = ("course", "course__subject")

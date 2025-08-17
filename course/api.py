@@ -61,7 +61,7 @@ class GroupViewSet(ModelViewSet):
 
 class CourseViweSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Course.objects.order_by("-id")
+    queryset = Course.objects.filter(available=True).order_by("-id")
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -79,7 +79,7 @@ class LessonViewSet(ModelViewSet):
 
 class SubjectViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Subject.objects.prefetch_related(
+    queryset = Subject.objects.filter(available=True).prefetch_related(
         Prefetch(
             "course_set",
             queryset=Course.objects.filter(available=True)[:1],

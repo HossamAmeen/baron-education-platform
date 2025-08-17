@@ -4,7 +4,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.urls import reverse
 from auth.models import PasswordReset
 from auth.serializers import (
     LoginSerializer,
@@ -90,9 +90,10 @@ class RequestPasswordReset(generics.GenericAPIView):
             token = PasswordResetTokenGenerator().make_token(user)
             PasswordReset.objects.create(email=user.email, token=token)
             from django.core.mail import send_mail
+            # reset_password_url = reverse("auth:reset-password", kwargs={"token": token})
             send_mail(
                 "Password Reset Request",
-                "Please click on the link below to reset your password: http://localhost:8080/reset-password/" + token,
+                "Please click on the link below to reset your password: " + "http://127.0.0.1:8000/auth/reset-password/" + token,
                 "from@example.com",
                 [user.email],
                 fail_silently=False,
