@@ -89,7 +89,14 @@ class RequestPasswordReset(generics.GenericAPIView):
 
             token = PasswordResetTokenGenerator().make_token(user)
             PasswordReset.objects.create(email=user.email, token=token)
-
+            from django.core.mail import send_mail
+            send_mail(
+                "Password Reset Request",
+                "Please click on the link below to reset your password: http://localhost:8080/reset-password/" + token,
+                "from@example.com",
+                [user.email],
+                fail_silently=False,
+            )
             return Response(
                 {"message": "we send url to your email.", "success": token},
                 status=status.HTTP_200_OK,

@@ -242,6 +242,7 @@ class LessonAdmin(admin.ModelAdmin):
         "video_link",
         "course",
         "course__subject",
+        "video_room_button",
     )
     search_fields = ("title",)
     list_filter = ("course", "course__subject")
@@ -252,7 +253,9 @@ class LessonAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related("course", "course__subject")
 
     def course__subject(self, obj):
-        return obj.course.subject.name
+        if obj.course and obj.course.subject:
+            return obj.course.subject.name
+        return "N/A"
 
     course__subject.short_description = "Subject"
 
@@ -266,3 +269,11 @@ class LessonAdmin(admin.ModelAdmin):
             course_field = context['adminform'].form.fields['course']
             course_field.label_from_instance = lambda obj: f"{obj.subject.semester.education_grade.education_stage.country.name} - {obj.subject.semester.education_grade.education_stage.name} - {obj.subject.semester.education_grade.name} - {obj.subject.semester.name} - {obj.subject.name} - {obj.name}"
         return super().render_change_form(request, context, *args, **kwargs)
+
+    def video_room_button(self, obj):
+        return format_html(
+            '<a class="button" href="{}" target="_blank">Open Video Room</a>',
+            reverse('video-room', args=[obj.id])
+        )
+    video_room_button.short_description = "Video Room"
+    video_room_button.allow_tags = True

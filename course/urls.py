@@ -10,6 +10,7 @@ from course.api import (
     SemesterViewSet,
     SubjectViewSet,
 )
+from course.views import VideoRoomView
 
 router = DefaultRouter()
 router.register(
@@ -24,4 +25,5 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path("countries/", CountryListAPIView.as_view(), name="countries"),
+    path("lesson/<int:lesson_id>/video-room/", VideoRoomView.as_view(), name="video-room"),
 ]

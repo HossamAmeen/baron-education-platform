@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+<script>
+    window.onload = function () {
+        function getUrlParams(url) {
+            let urlStr = url.split('?')[1];
+            const urlSearchParams = new URLSearchParams(urlStr);
+            return Object.fromEntries(urlSearchParams.entries());
+        }
+    
+        const params = getUrlParams(window.location.href);
+        const roomID = params['roomID'] || (Math.floor(Math.random() * 10000) + "");
+        const userID = Math.floor(Math.random() * 10000) + "";
+        const userName = "userName" + userID;
+        const appID = 1524590697;
+        const serverSecret = "b3ef31a39250abbb3505944cef072471";
+        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+    
+        // Determine role from URL or default to Host
+        let role = params['role'] || 'Host';
+        role = role === 'Host' ? ZegoUIKitPrebuilt.Host : ZegoUIKitPrebuilt.Audience;
+        
+        let config = {};
+        if(role === ZegoUIKitPrebuilt.Host){
+            config = {
+                turnOnCameraWhenJoining: true,
+                showMyCameraToggleButton: true,
+                showAudioVideoSettingsButton: true,
+                showScreenSharingButton: true,
+                showTextChat: true,
+                showUserList: true,
+            }
+        }
+    
+        // Generate the audience share link
+        const audienceLink = window.location.origin + 
+                            window.location.pathname + 
+                            '?roomID=' + roomID + 
+                            '&role=Audience';
+    
+        const zp = ZegoUIKitPrebuilt.create(kitToken);
+        zp.joinRoom({
+            container: document.querySelector("#root"),
+            scenario: {
+                mode: ZegoUIKitPrebuilt.LiveStreaming,
+                config: { role },
+            },
+            sharedLinks: [
+                {
+                    name: 'Copy Audience Link',
+                    url: audienceLink
+                },
+                {
+                    name: 'Join as Audience (New Tab)',
+                    url: audienceLink,
+                    onClick: function() {
+                        window.open(audienceLink, '_blank');
+                        return false; // Prevent default link behavior
+                    }
+                }
+            ],
+            ...config
+        });
+    
+        // For hosts, show the direct link in console for debugging
+        if (role === ZegoUIKitPrebuilt.Host) {
+            console.log('Audience share link:', audienceLink);
+        }
+    }
+    </script>
+</html>

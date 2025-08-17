@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group, make_password
 
-from users.models import Student, User
+from users.models import Student, Teacher, User
 
 
 class UserForm(forms.ModelForm):
@@ -144,5 +144,10 @@ class UserAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).exclude(role="student")
 
+@admin.register(Teacher)
+class TeacherAdmin(admin.ModelAdmin):
+    list_display = ("id", "first_name", "last_name", "phone", "email", "role")
+    search_fields = ("phone", "email", "role")
+    list_filter = ("phone", "email", "role")
 
 admin.site.unregister(Group)

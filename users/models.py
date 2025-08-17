@@ -44,6 +44,10 @@ class Manager(User):
 class Teacher(User):
     pass
 
+    class Meta:
+        verbose_name = "Teacher"
+        verbose_name_plural = "Teachers"
+
 
 class Student(User):
     parent_phone = models.CharField(max_length=50)
