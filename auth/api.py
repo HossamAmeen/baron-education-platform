@@ -4,7 +4,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.contrib.auth.tokens import default_token_generator
 from auth.models import PasswordReset
 from auth.serializers import (
     LoginSerializer,
@@ -15,7 +15,11 @@ from auth.serializers import (
 )
 from shared.permisions import IsStudent
 from users.models import User
-
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.conf import settings
 
 class RegisterAPI(generics.CreateAPIView):
     authentication_classes = []
@@ -78,38 +82,34 @@ class RequestPasswordReset(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = User.objects.filter(
-            email__iexact=serializer.validated_data["email"]
-        ).first()
-        if user:
-            if PasswordReset.objects.filter(email=user.email).count() > 2:
-                return Response(
-                    {"message": "we send url to your email."}, status=status.HTTP_200_OK
-                )
 
-            token = PasswordResetTokenGenerator().make_token(user)
-            PasswordReset.objects.create(email=user.email, token=token)
-            from django.core.mail import send_mail
-            
-            send_mail(
-                "Password Reset Request",
-                "Please click on the link below to reset your password: http://localhost:8000/reset-password/" + token,
-                "from@example.com",
-                [user.email],
-                fail_silently=False,
-            )
-            return Response(
-                {"message": "we send url to your email.", "success": token},
-                status=status.HTTP_200_OK,
-            )
-        else:
-            return Response(
-                {"error": "User with credentials not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+        try:
+            user = User.objects.get(email=serializer.validated_data['email'])
+        except User.DoesNotExist:
+            return Response({'error': 'User with this email does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Generate token and uid
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        # Create reset URL
+        rest_password_url = reverse("password_reset_confirm", args=[uid, token])
+
+        # Send email
+        subject = 'Password Reset Request'
+        message = f'Click the link to reset your password: {request.build_absolute_uri(rest_password_url)}'
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+
+        return Response({'success': 'Password reset email sent'}, status=status.HTTP_200_OK)
 
 
-class ResetPassword(generics.GenericAPIView):
+class PasswordResetConfirmView(generics.GenericAPIView):
     serializer_class = ResetPasswordSerializer
     permission_classes = [AllowAny]
 

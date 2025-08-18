@@ -87,8 +87,10 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
+        "DIRS": [
+            os.path.join(BASE_DIR, 'templates'),  # Add this if you have project-wide templates
+        ],
+        "APP_DIRS": True,  # This ensures Django looks for templates in app directories
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -235,3 +237,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")

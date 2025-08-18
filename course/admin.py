@@ -31,18 +31,11 @@ class EducationStageAdmin(admin.ModelAdmin):
     list_filter = ("country",)
 
 
-class EducationGradeForm(forms.ModelForm):
-    class Meta:
-        model = EducationGrade
-        fields = '__all__'
-
-
 @admin.register(EducationGrade)
 class EducationGradeAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "education_stage", "get_country", "created")
     search_fields = ("name",)
     list_filter = ("education_stage__country", "education_stage")
-    # form = EducationGradeForm
     
     def get_country(self, obj):
         return obj.education_stage.country
@@ -54,7 +47,7 @@ class EducationGradeAdmin(admin.ModelAdmin):
         js = ('admin/js/education_grade_filter.js',)
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "education_stage":
-            kwargs["queryset"] = EducationStage.objects.order_by('name').select_related("country")
+            kwargs["queryset"] = EducationStage.objects.order_by('country__name', 'name').select_related("country")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def render_change_form(self, request, context, *args, **kwargs):
@@ -92,7 +85,7 @@ class SemesterAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "education_grade":
-            kwargs["queryset"] = EducationGrade.objects.order_by('name').select_related("education_stage__country")
+            kwargs["queryset"] = EducationGrade.objects.order_by('education_stage__country__name', 'education_stage__name', 'name').select_related("education_stage__country")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
     def render_change_form(self, request, context, *args, **kwargs):
@@ -140,7 +133,7 @@ class SubjectAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "semester":
-            kwargs["queryset"] = Semester.objects.order_by('name').select_related("education_grade__education_stage__country")
+            kwargs["queryset"] = Semester.objects.order_by('education_grade__education_stage__country__name', 'education_grade__education_stage__name', 'education_grade__name', 'name').select_related("education_grade__education_stage__country")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
     def render_change_form(self, request, context, *args, **kwargs):
@@ -280,7 +273,11 @@ class LessonAdmin(admin.ModelAdmin):
     def render_change_form(self, request, context, *args, **kwargs):
         if 'course' in context['adminform'].form.fields:
             course_field = context['adminform'].form.fields['course']
-            course_field.label_from_instance = lambda obj: f"{obj.subject.semester.education_grade.education_stage.country.name} - {obj.subject.semester.education_grade.education_stage.name} - {obj.subject.semester.education_grade.name} - {obj.subject.semester.name} - {obj.subject.name} - {obj.name}"
+            obj = context['original']
+            if obj and obj.course and obj.course.subject:
+                course_field.label_from_instance = lambda obj: f"{obj.course.subject.semester.education_grade.education_stage.country.name} - {obj.course.subject.semester.education_grade.education_stage.name} - {obj.course.subject.semester.education_grade.name} - {obj.course.subject.semester.name} - {obj.course.subject.name} - {obj.name}"
+            else:
+                course_field.label_from_instance = lambda obj: f"{obj.name}"
         return super().render_change_form(request, context, *args, **kwargs)
 
     def video_room_button(self, obj):

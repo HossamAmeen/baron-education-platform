@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Get the country and education stage select elements
-    const countrySelect = document.querySelector('select[name$="country"]');
+    // const countrySelect = document.querySelector('select[name$="country"]');
     const educationStageSelect = document.querySelector('select[name$="education_stage"]');
-    
+    // const countrySelect = document.querySelector('select[id$="-country"]');
+    // const countrySelect = document.querySelector('select[id*="country"]');
+    // const countrySelect = document.getElementById('id_country');
+    console.log("test")
+    console.log(countrySelect)
+    console.log(educationStageSelect)
     if (countrySelect && educationStageSelect) {
         // Function to update education stage options
         function updateEducationStages() {
