@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
-
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import path
 from payments.models import Transaction
 
 from .models import (
@@ -243,7 +244,7 @@ class LessonAdmin(admin.ModelAdmin):
         "date",
         "time",
         "explanation_file",
-        "test_link",
+        "get_test_link",
         "video_link",
         "course",
         "course__subject",
@@ -265,6 +266,15 @@ class LessonAdmin(admin.ModelAdmin):
 
     course__subject.short_description = "Subject"
 
+    def get_test_link(self, obj):
+        return format_html(
+            '<a href="{}">{}</a>'.format(
+                obj.test_link, "Test Link"
+            )
+        )
+
+    get_test_link.short_description = "Test Link"
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "course":
             kwargs["queryset"] = Course.objects.order_by('name').select_related("subject__semester__education_grade__education_stage__country")
@@ -280,10 +290,45 @@ class LessonAdmin(admin.ModelAdmin):
                 course_field.label_from_instance = lambda obj: f"{obj.name}"
         return super().render_change_form(request, context, *args, **kwargs)
 
+    def get_urls(self):
+        """Extend admin with custom URL"""
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "generate-host-link/<int:lesson_id>/",
+                self.admin_site.admin_view(self.generate_host_link),
+                name="generate_host_link",
+            ),
+        ]
+        return custom_urls + urls
+
     def video_room_button(self, obj):
-        return format_html(
-            '<a class="button" href="{}" target="_blank">Open Video Room</a>',
-            reverse('video-room', args=[obj.id])
-        )
+        """Show button in admin list to generate host link"""
+        url = reverse("admin:generate_host_link", args=[obj.id])
+        return format_html(f'<a class="button" href="{url}">🎥 Generate Room</a>')
     video_room_button.short_description = "Video Room"
-    video_room_button.allow_tags = True
+
+    def generate_host_link(self, request, lesson_id):
+        """Custom admin action: generate host link + update lesson.video_link"""
+        lesson = get_object_or_404(Lesson, pk=lesson_id)
+
+        # Use lesson.id as roomID, and teacher name
+        room_id = str(lesson.id)
+        teacher_name = getattr(lesson.course, "teacher", None)
+        teacher_name = teacher_name.first_name if teacher_name else "Teacher"
+
+        # Build links
+        base_url = request.build_absolute_uri("/video/")
+        host_link = f"{base_url}?roomID={room_id}&role=Host&userName={teacher_name}"
+        audience_link = f"{base_url}?roomID={room_id}&role=Audience"
+
+        # Save audience link to lesson
+        lesson.video_link = audience_link
+        lesson.save(update_fields=["video_link"])
+
+        # Show success message in admin
+        self.message_user(request, f"✅ Host link generated: {host_link}")
+
+        # Redirect back to the lesson changelist
+        return redirect(request.META.get("HTTP_REFERER", "admin:index"))
+
