@@ -25,5 +25,5 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path("countries/", CountryListAPIView.as_view(), name="countries"),
-    path("lesson/<int:lesson_id>/video-room/", VideoRoomView.as_view(), name="video-room"),
+    path("lesson/<int:lesson_id>/generate-host-link/", VideoRoomView.as_view(), name="generate-host-link"),
 ]

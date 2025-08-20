@@ -1,321 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Django Admin - Lessons</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .admin-header {
-            background: #417690;
-            color: #fff;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .breadcrumb {
-            background: #79aec8;
-            padding: 10px 30px;
-            color: #c4dce8;
-            font-size: 0.9rem;
-        }
-        
-        .breadcrumb a {
-            color: #fff;
-            text-decoration: none;
-        }
-        
-        .content {
-            padding: 20px 30px;
-        }
-        
-        .success-message {
-            background: #dfd;
-            border: 1px solid #ada;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            color: #363;
-        }
-        
-        .module {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .module-header {
-            background: #f8f8f8;
-            padding: 10px 15px;
-            border-bottom: 1px solid #ddd;
-            font-weight: bold;
-        }
-        
-        .module table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .module th, .module td {
-            padding: 10px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .module th {
-            background: #f8f8f8;
-            font-weight: 600;
-        }
-        
-        .module tr:hover {
-            background: #f9f9f9;
-        }
-        
-        .button, .copy-host-btn {
-            display: inline-block;
-            background: #417690;
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            border: none;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        
-        .button:hover, .copy-host-btn:hover {
-            background: #205067;
-        }
-        
-        .search-form {
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .search-form input {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        
-        .search-form button {
-            background: #417690;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        .pagination a {
-            color: #417690;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            margin: 0 2px;
-            border-radius: 3px;
-        }
-        
-        .pagination a.active {
-            background: #417690;
-            color: white;
-        }
-        
-        .filter-sidebar {
-            float: right;
-            width: 25%;
-            margin-left: 20px;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-        }
-        
-        .filter-sidebar h3 {
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .filter-group {
-            margin-bottom: 15px;
-        }
-        
-        .filter-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        @media (max-width: 768px) {
-            .filter-sidebar {
-                float: none;
-                width: 100%;
-                margin-left: 0;
-                margin-bottom: 20px;
-            }
+        #root {
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div class="admin-header">
-        <h1>Django Administration</h1>
-        <div class="user-tools">
-            Welcome, <strong>admin</strong> /
-            <a href="#">View site</a> /
-            <a href="#">Log out</a>
-        </div>
-    </div>
-    
-    <div class="breadcrumb">
-        <a href="#">Home</a> &rsaquo; 
-        <a href="#">Course</a> &rsaquo; 
-        Lessons
-    </div>
-    
-    <div class="content">
-        <div class="success-message">
-            The Lesson <strong>"test"</strong> was added successfully.
-        </div>
-        
-        <div class="module">
-            <div class="module-header">
-                <span>Course</span>
-                <div class="search-form" style="display: inline-block; float: right;">
-                    <input type="text" placeholder="Search">
-                    <button type="submit">Search</button>
-                </div>
-            </div>
-            <div style="padding: 10px 15px; background: #ffc;">
-                0 of 1 selected
-            </div>
-        </div>
-        
-        <div class="filter-sidebar">
-            <h3>Filter</h3>
-            <div class="filter-group">
-                <label for="course-filter">Course</label>
-                <select id="course-filter">
-                    <option value="">All</option>
-                    <option value="1">Computer Science 101</option>
-                    <option value="2">Mathematics Advanced</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="subject-filter">Subject</label>
-                <select id="subject-filter">
-                    <option value="">All</option>
-                    <option value="1">Physics</option>
-                    <option value="2">Mathematics</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="module">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Explanation file</th>
-                        <th>Test link</th>
-                        <th>Video link</th>
-                        <th>Course</th>
-                        <th>Subject</th>
-                        <th>Video Room</th>
-                        <th>Created</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>101</td>
-                        <td>test</td>
-                        <td>Aug. 20, 2025</td>
-                        <td>11:54</td>
-                        <td>media/physics_take.jpeg</td>
-                        <td><a href="#">http://127.0.0.1:8000/admin/...</a></td>
-                        <td><a href="#">http://127.0.0.1:8000/admin/...</a></td>
-                        <td>Computer Science Interactive</td>
-                        <td>N/A</td>
-                        <td>
-                            <a class="button" href="#" target="_blank">Open Video Room</a>
-                            <button class="copy-host-btn" onclick="copyHostLink(101)">Copy Host Link</button>
-                        </td>
-                        <td>Aug. 20, 2025, 11:54 a.m.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="pagination">
-            <span class="step-links">
-                <a href="#">&laquo; Previous</a>
-                <a class="active" href="#">1</a>
-                <a href="#">Next &raquo;</a>
-            </span>
-        </div>
-    </div>
-
-    <script>
-        function copyHostLink(lessonId) {
-            // In a real implementation, this would generate the actual host link
-            // For demonstration, we'll create a sample link
-            const hostLink = `${window.location.origin}/video-room/${lessonId}/?role=Host`;
-            
-            // Create a temporary textarea to copy text
-            const textarea = document.createElement('textarea');
-            textarea.value = hostLink;
-            document.body.appendChild(textarea);
-            textarea.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                const msg = successful ? 'Host link copied to clipboard!' : 'Failed to copy link';
-                alert(msg);
-            } catch (err) {
-                alert('Failed to copy link: ' + err);
-            }
-            
-            document.body.removeChild(textarea);
-        }
-        
-        // Add event listener to all copy buttons when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            const copyButtons = document.querySelectorAll('.copy-host-btn');
-            copyButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const lessonId = this.getAttribute('data-lesson-id') || 
-                                    this.parentElement.parentElement.firstElementChild.textContent;
-                    copyHostLink(lessonId);
-                });
-            });
-        });
-    </script>
+    <div id="root"></div>
 </body>
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+<script>
+window.onload = function () {
+    function getUrlParams(url) {
+        let urlStr = url.split('?')[1];
+        const urlSearchParams = new URLSearchParams(urlStr);
+        return Object.fromEntries(urlSearchParams.entries());
+    }
+
+    const params = getUrlParams(window.location.href);
+    const roomID = params['roomID'];
+    const userID = Math.floor(Math.random() * 10000) + "";
+    const userName = params['userName'] || ("user" + userID);
+    const appID = 1524590697;
+    const serverSecret = "b3ef31a39250abbb3505944cef072471";
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+
+    let role = params['role'] || 'Host';
+    role = role === 'Host' ? ZegoUIKitPrebuilt.Host : ZegoUIKitPrebuilt.Audience;
+
+    let config = {}
+    if (role === ZegoUIKitPrebuilt.Host) {
+        config = {
+            turnOnCameraWhenJoining: true,
+            showMyCameraToggleButton: true,
+            showAudioVideoSettingsButton: true,
+            showScreenSharingButton: true,
+            showTextChat: true,
+            showUserList: true,
+        }
+    }
+
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+    zp.joinRoom({
+        container: document.querySelector("#root"),
+        scenario: {
+            mode: ZegoUIKitPrebuilt.LiveStreaming,
+            config: { role },
+        },
+        sharedLinks: [{
+            name: 'Join as an audience',
+            url: window.location.protocol + '//' +
+                 window.location.host +
+                 window.location.pathname +
+                 '?roomID=' + roomID +
+                 '&role=Audience',
+        }],
+        ...config
+    });
+}
+</script>
 </html>

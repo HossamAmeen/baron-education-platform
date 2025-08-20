@@ -318,7 +318,7 @@ class LessonAdmin(admin.ModelAdmin):
         teacher_name = teacher_name.first_name if teacher_name else "Teacher"
 
         # Build links
-        base_url = request.build_absolute_uri("/video/")
+        base_url = request.build_absolute_uri(f"/courses/lesson/{lesson_id}/generate-host-link/")
         host_link = f"{base_url}?roomID={room_id}&role=Host&userName={teacher_name}"
         audience_link = f"{base_url}?roomID={room_id}&role=Audience"
 
